@@ -38,9 +38,35 @@
     .grid{display:grid;grid-template-columns:1fr 360px;gap:18px;margin-top:18px;align-items:start}.panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden}.panelHead{padding:18px 18px 12px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}.panelHead h2{font-size:18px;margin:0}.panelBody{padding:18px}.formGrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}.field{display:flex;flex-direction:column;gap:7px}.field label{font-size:12px;font-weight:900;color:#345a56;text-transform:uppercase;letter-spacing:.04em}.field input,.field select,.field textarea{width:100%;border:1px solid var(--line);border-radius:13px;padding:11px 12px;background:#fbfffd;color:var(--ink);font:inherit;outline:none}.field textarea{min-height:74px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:#14b8a6;box-shadow:0 0 0 4px rgba(20,184,166,.12)}
     .span2{grid-column:span 2}.span4{grid-column:1/-1}.hint{color:var(--muted);font-size:13px;line-height:1.45}.tag{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:7px 10px;background:#eef8f5;border:1px solid var(--line);color:#0f514d;font-weight:800;font-size:12px}.tag.red{background:#fef2f2;color:#991b1b;border-color:#fecaca}.tag.green{background:#ecfdf5;color:#166534;border-color:#bbf7d0}.tag.orange{background:#fff7ed;color:#9a3412;border-color:#fed7aa}
     .tableWrap{overflow:auto;border:1px solid var(--line);border-radius:18px}.costTable{width:100%;border-collapse:separate;border-spacing:0;min-width:850px}.costTable th{position:sticky;top:0;background:#ecfdf5;color:#0f514d;font-size:12px;text-transform:uppercase;letter-spacing:.04em;text-align:left;padding:11px;border-bottom:1px solid var(--line);z-index:1}.costTable td{padding:9px;border-bottom:1px solid #eef4f2;vertical-align:middle}.costTable tr:last-child td{border-bottom:0}.costTable input,.costTable select{width:100%;border:1px solid #d8e7e3;border-radius:11px;padding:9px;background:white}.costTable input[type=number]{text-align:right}.moneyCell{font-variant-numeric:tabular-nums;text-align:right;font-weight:800;color:#0f514d}.miniBtn{padding:8px 10px;border-radius:10px;font-size:12px}.summary{position:sticky;top:12px;display:flex;flex-direction:column;gap:14px}.summaryBox{background:#0b3b37;color:white;border-radius:24px;padding:18px;box-shadow:var(--shadow)}.summaryBox h3{margin:0 0 12px;font-size:16px}.sumRow{display:flex;justify-content:space-between;gap:14px;padding:9px 0;border-bottom:1px dashed rgba(255,255,255,.2);font-size:14px}.sumRow:last-child{border-bottom:0}.sumRow strong{font-variant-numeric:tabular-nums;text-align:right}.grand{background:#f59e0b;color:#291a00;border-radius:18px;padding:14px;margin-top:12px}.grand small{display:block;font-weight:900;opacity:.76}.grand strong{display:block;font-size:26px;margin-top:4px;line-height:1}.note{background:#fffbeb;border:1px solid #fde68a;color:#713f12;border-radius:18px;padding:14px;font-size:13px;line-height:1.5}.formula{background:#f8fafc;border:1px solid #e2e8f0;border-radius:18px;padding:14px;font-size:13px;color:#334155;line-height:1.55}.formula code{background:#e2e8f0;padding:2px 5px;border-radius:6px}.tabs{display:flex;gap:8px;flex-wrap:wrap}.tab{background:#f1f5f9;color:#334155;border:1px solid #e2e8f0}.tab.active{background:#0f766e;color:white;border-color:#0f766e}.section{display:none}.section.active{display:block}.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#0b3b37;color:white;border-radius:999px;padding:12px 16px;box-shadow:0 20px 50px rgba(0,0,0,.25);opacity:0;pointer-events:none;transition:.2s;z-index:99}.toast.show{opacity:1;bottom:34px}.installBar{display:none;position:fixed;bottom:16px;right:16px;z-index:50;background:white;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:20px;padding:12px;gap:10px;align-items:center;max-width:360px}.installBar.show{display:flex}.installBar p{margin:0;font-size:13px;color:#345a56}.printOnly{display:none}.disclaimer{font-size:12px;color:#64748b;line-height:1.5}.pillRow{display:flex;gap:8px;flex-wrap:wrap}.statusLine{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.rightActions{display:flex;gap:8px;flex-wrap:wrap}
+
+    .mobilePrintView{display:none;position:fixed;inset:0;z-index:1000;background:white;color:#111827;overflow:auto}
+    .mobilePrintToolbar{position:sticky;top:0;z-index:1001;background:#0b3b37;color:white;padding:10px;display:flex;gap:8px;flex-wrap:wrap;box-shadow:0 8px 24px rgba(0,0,0,.18)}
+    .mobilePrintToolbar button{border-radius:12px;padding:10px 12px;font-size:13px}
+    #mobilePrintContent{padding:12mm;background:white;font-family:Arial,Helvetica,sans-serif;color:#111827;font-size:11px;line-height:1.35}
+    #mobilePrintContent h1{font-size:20px;text-align:center;margin:0 0 4px;color:#0f4f4a;letter-spacing:.08em}
+    #mobilePrintContent h2{font-size:14px;margin:16px 0 7px;color:#0f766e}
+    #mobilePrintContent h3{font-size:12px;margin:12px 0 6px;color:#111827}
+    #mobilePrintContent .sub{text-align:center;color:#475569;margin-bottom:12px}
+    #mobilePrintContent .kop{display:flex;justify-content:space-between;border-bottom:1px solid #bcd7d1;padding-bottom:6px;margin-bottom:14px;color:#0f766e;font-weight:700}
+    #mobilePrintContent .meta{color:#64748b;font-weight:400}
+    #mobilePrintContent .box{border:1px solid #d8e7e3;background:#f8fffc;padding:9px;border-radius:8px;margin:8px 0}
+    #mobilePrintContent table{width:100%;border-collapse:collapse;margin:6px 0 10px}
+    #mobilePrintContent th{background:#0f766e;color:white;text-align:left;font-weight:700}
+    #mobilePrintContent th,#mobilePrintContent td{border:1px solid #d8e7e3;padding:5px 6px;vertical-align:top}
+    #mobilePrintContent .right{text-align:right} #mobilePrintContent .center{text-align:center}
+    #mobilePrintContent .total td{font-weight:700;background:#ecfdf5}
+    #mobilePrintContent .sign td{height:68px}
+    #mobilePrintContent .small{font-size:10px}
+    #mobilePrintContent .pagebreak{break-before:page}
+    #mobilePrintContent .footer{border-top:1px solid #bcd7d1;padding-top:5px;color:#64748b;font-size:9px;margin-top:18px}
+    body.mobilePrintActive{overflow:hidden;background:white}
+    body.mobilePrintActive .app,body.mobilePrintActive .installBar,body.mobilePrintActive .toast{display:none!important}
+    body.mobilePrintActive .mobilePrintView{display:block}
     @media(max-width:980px){.hero,.grid{grid-template-columns:1fr}.summary{position:static}.formGrid{grid-template-columns:1fr 1fr}.span4{grid-column:1/-1}}
     @media(max-width:640px){.app{padding:12px 10px 90px}.brand,.sideCard{border-radius:24px;padding:18px}.formGrid{grid-template-columns:1fr}.span2,.span4{grid-column:1/-1}.panelHead{align-items:flex-start}.score{grid-template-columns:1fr}.metric.wide{grid-column:auto}.topActions button,.topActions .btn{width:100%;justify-content:center}.installBar{left:10px;right:10px;max-width:none}.grand strong{font-size:22px}h1{letter-spacing:-.5px}}
     @media print{body{background:white}.app{max-width:none;padding:0}.hero,.topActions,.tabs,.installBar,.noPrint,.toast{display:none!important}.grid{display:block}.panel,.summaryBox,.note,.formula{box-shadow:none;border:1px solid #ddd}.summary{position:static}.printOnly{display:block}.section{display:block}.section:not(.printKeep){page-break-before:always}.costTable{min-width:0;font-size:11px}.costTable input,.costTable select{border:0;padding:0;background:transparent}.btn{display:none}.panel{margin-bottom:14px}.summaryBox{color:#111;background:white}.sumRow{border-bottom:1px solid #ddd}.grand{background:white;border:1px solid #ddd}.brand{display:none}}
+
+    @media print{body.mobilePrintActive{background:white!important}body.mobilePrintActive .mobilePrintView{display:block!important;position:static!important;inset:auto!important;overflow:visible!important}body.mobilePrintActive .mobilePrintToolbar{display:none!important}body.mobilePrintActive #mobilePrintContent{padding:0!important}body.mobilePrintActive .app,body.mobilePrintActive .installBar,body.mobilePrintActive .toast{display:none!important}body.mobilePrintActive #mobilePrintContent .footer{position:fixed;left:0;right:0;bottom:0;margin:0}}
   </style>
 </head>
 <body>
@@ -83,7 +109,8 @@
               <button class="tab" data-tab="biaya">2. Rincian Biaya</button>
               <button class="tab" data-tab="partlist">3. Part List Unit + Engine</button>
               <button class="tab" data-tab="setting">4. Pajak & Margin</button>
-              <button class="tab" data-tab="laporan">5. Laporan</button>
+              <button class="tab" data-tab="professional">5. Jasa Profesional</button>
+              <button class="tab" data-tab="laporan">6. Laporan</button>
             </div>
           </div>
         </div>
@@ -191,6 +218,28 @@
           </div>
         </section>
 
+        <section class="panel section" id="tab-professional">
+          <div class="panelHead">
+            <h2>Jasa Profesional Opsional</h2>
+            <span class="tag">Biaya setelah pajak</span>
+          </div>
+          <div class="panelBody">
+            <p class="hint">Menu ini untuk biaya jasa profesional yang bersifat opsional dan legal/terdokumentasi. Perhitungan dilakukan dari nilai bersih setelah pajak, yaitu total harga dikurangi PPN dan PPh.</p>
+            <div class="formGrid">
+              <div class="field"><label>Nama/Uraian Jasa Profesional</label><input id="professionalName" value="Jasa Profesional" /></div>
+              <div class="field"><label>Jasa Profesional (%)</label><input id="professionalPct" type="number" min="0" step="0.1" value="0" /></div>
+              <div class="field"><label>Jasa Profesional Nominal</label><input id="professionalNominal" type="number" min="0" step="1000" value="0" /></div>
+              <div class="field"><label>Status</label><input value="Opsional - boleh dikosongkan" readonly /></div>
+              <div class="field span4"><label>Catatan Jasa Profesional</label><textarea id="professionalNote">Opsional. Dihitung dari nilai bersih setelah PPN dan PPh. Hanya gunakan untuk jasa profesional yang sah, wajar, dan dapat didukung dokumen.</textarea></div>
+            </div>
+            <div class="formula" style="margin-top:14px">
+              <b>Formula:</b> <code>Dasar setelah pajak = Total harga termasuk PPN - PPN - PPh dipotong</code><br/>
+              <code>Jasa Profesional = Dasar setelah pajak × Persentase + Nominal</code><br/>
+              <code>Bersih setelah jasa = Dasar setelah pajak - Jasa Profesional</code>
+            </div>
+          </div>
+        </section>
+
         <section class="panel section" id="tab-laporan">
           <div class="panelHead">
             <h2>Laporan Ringkas Penawaran</h2>
@@ -216,6 +265,9 @@
           <div class="sumRow"><span>Harga / unit</span><strong id="sPerUnit">Rp0</strong></div>
           <div class="sumRow"><span>PPh dipotong</span><strong id="sPph">Rp0</strong></div>
           <div class="sumRow"><span>Cash masuk setelah PPh</span><strong id="sCash">Rp0</strong></div>
+          <div class="sumRow"><span>Dasar setelah pajak</span><strong id="sProfessionalBase">Rp0</strong></div>
+          <div class="sumRow"><span>Jasa profesional</span><strong id="sProfessionalFee">Rp0</strong></div>
+          <div class="sumRow"><span>Bersih setelah jasa</span><strong id="sNetAfterProfessional">Rp0</strong></div>
         </div>
         <div class="note">
           <b>Pengingat penting:</b> profit 15% di sini adalah batas internal aplikasi. Tetap cek dokumen tender/e-katalog, status pajak, dan aturan instansi sebelum harga final diajukan.
@@ -231,6 +283,16 @@
     </div>
   </div>
 
+
+  <div class="mobilePrintView" id="mobilePrintView">
+    <div class="mobilePrintToolbar noPrint">
+      <button class="btnPrimary" id="mobilePrintNow">🖨️ Cetak / Simpan PDF</button>
+      <button class="btnGhost" id="mobilePrintBack">← Kembali ke Aplikasi</button>
+      <span style="align-self:center;font-size:12px;opacity:.9">Di HP: pilih Print/Cetak, lalu pilih Save as PDF bila tersedia.</span>
+    </div>
+    <div id="mobilePrintContent"></div>
+  </div>
+
   <div class="installBar" id="installBar"><p><b>Install aplikasi?</b><br/>Bisa dibuka seperti app dan dipakai offline setelah dibuka pertama kali.</p><button class="btnPrimary" id="installBtnBar">Install</button><button class="btnGhost" id="hideInstall">Nanti</button></div>
   <div class="toast" id="toast">Tersimpan</div>
 
@@ -238,7 +300,7 @@
 const $ = (id)=>document.getElementById(id);
 const fmt = new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0});
 const num = (v)=> Number(String(v ?? 0).replace(/[^0-9.-]/g,'')) || 0;
-const stateKey = 'hpp_pompa_pengadaan_pwa_v16_print_partlist';
+const stateKey = 'hpp_pompa_pengadaan_pwa_v18_mobile_print';
 let deferredPrompt = null;
 
 const defaultRows = [
@@ -378,7 +440,7 @@ function getRows(){ return [...document.querySelectorAll('#costBody tr')].map(tr
   qty:num(tr.querySelector('.cQty').value), price:num(tr.querySelector('.cPrice').value),
   total:num(tr.querySelector('.cQty').value)*num(tr.querySelector('.cPrice').value)
 })); }
-function getForm(){ const ids=['projectName','providerName','officeAddress','year','agency','method','location','brand','pumpType','displayPrice','qtyUnit','capacity','bundle','masterSource','specNote','overheadPct','riskPct','marketingPct','marketingNominal','profitPct','profitCap','ppnPct','pphPct','platformPct','rounding','roundingMode','taxNote']; const o={}; ids.forEach(id=>o[id]=$(id).value); o.rows=getRows(); o.partRows=getPartRows ? getPartRows() : []; return o; }
+function getForm(){ const ids=['projectName','providerName','officeAddress','year','agency','method','location','brand','pumpType','displayPrice','qtyUnit','capacity','bundle','masterSource','specNote','overheadPct','riskPct','marketingPct','marketingNominal','profitPct','profitCap','ppnPct','pphPct','platformPct','rounding','roundingMode','taxNote','professionalName','professionalPct','professionalNominal','professionalNote']; const o={}; ids.forEach(id=>o[id]=$(id).value); o.rows=getRows(); o.partRows=getPartRows ? getPartRows() : []; return o; }
 function currentPumpProfile(){
   const type = $('pumpType').value || '';
   const group = type.includes('160') || type.includes('6 inch') ? '6 inch' : (type.includes('100') || type.includes('4 inch') ? '4 inch' : '3 inch');
@@ -516,7 +578,7 @@ function calc(){
   const displayPerUnit = $('displayPrice') ? num($('displayPrice').value) : 0;
   const priceMode = displayPerUnit > 0;
   let rows=baseRows.map(r=>({...r}));
-  let subtotal=baseSubtotal, overhead=0, risk=0, marketing=0, hpp=0, usedPct=0, profit=0, platform=0, dpp=0, ppn=0, grand=0, perUnit=0, pph=0, cash=0, roundingDelta=0, adjustment=0, targetHpp=0;
+  let subtotal=baseSubtotal, overhead=0, risk=0, marketing=0, hpp=0, usedPct=0, profit=0, platform=0, dpp=0, ppn=0, grand=0, perUnit=0, pph=0, cash=0, professionalBase=0, professionalFee=0, netAfterProfessional=0, roundingDelta=0, adjustment=0, targetHpp=0;
 
   if(priceMode){
     grand = displayPerUnit * qty;
@@ -558,14 +620,19 @@ function calc(){
     cash=grand-pph;
   }
 
-  $('sSubtotal').textContent=fmt.format(subtotal); $('sOverhead').textContent=fmt.format(overhead); $('sRisk').textContent=fmt.format(risk); $('sMarketing').textContent=fmt.format(marketing); $('sHpp').textContent=fmt.format(hpp); $('sProfit').textContent=fmt.format(profit)+` (${usedPct.toFixed(1)}%)`; $('sPlatform').textContent=fmt.format(platform); $('sDpp').textContent=fmt.format(dpp); $('sPpn').textContent=fmt.format(ppn); $('sGrand').textContent=fmt.format(grand); $('sPerUnit').textContent=fmt.format(perUnit); $('sPph').textContent=fmt.format(pph); $('sCash').textContent=fmt.format(cash);
+  professionalBase = Math.max(0, grand - ppn - pph);
+  professionalFee = professionalBase*num($('professionalPct')?.value)/100 + num($('professionalNominal')?.value);
+  professionalFee = Math.min(Math.max(0, professionalFee), professionalBase);
+  netAfterProfessional = professionalBase - professionalFee;
+
+  $('sSubtotal').textContent=fmt.format(subtotal); $('sOverhead').textContent=fmt.format(overhead); $('sRisk').textContent=fmt.format(risk); $('sMarketing').textContent=fmt.format(marketing); $('sHpp').textContent=fmt.format(hpp); $('sProfit').textContent=fmt.format(profit)+` (${usedPct.toFixed(1)}%)`; $('sPlatform').textContent=fmt.format(platform); $('sDpp').textContent=fmt.format(dpp); $('sPpn').textContent=fmt.format(ppn); $('sGrand').textContent=fmt.format(grand); $('sPerUnit').textContent=fmt.format(perUnit); $('sPph').textContent=fmt.format(pph); $('sCash').textContent=fmt.format(cash); $('sProfessionalBase').textContent=fmt.format(professionalBase); $('sProfessionalFee').textContent=fmt.format(professionalFee); $('sNetAfterProfessional').textContent=fmt.format(netAfterProfessional);
   $('topPerUnit').textContent=fmt.format(perUnit); $('topGrand').textContent=fmt.format(grand);
   const requested=Math.max(0,num($('profitPct').value));
   const status = priceMode ? `Harga tayang final: profit ${usedPct.toFixed(1)}%` : (requested>15 || requested>num($('profitCap').value) ? `Profit dipangkas ke ${usedPct.toFixed(1)}%` : `Aman: ${usedPct.toFixed(1)}%`);
   $('topStatus').textContent=status; $('profitWarn').textContent=status;
   $('profitWarn').className='tag '+((usedPct>15.05 || usedPct<0)?'red':'green');
-  renderReport({rows,baseRows,baseSubtotal,subtotal,overhead,risk,marketing,hpp,usedPct,profit,platform,dpp,ppn,grand,perUnit,pph,cash,roundingDelta,priceMode,displayPerUnit,adjustment,targetHpp});
-  return {rows,baseRows,baseSubtotal,subtotal,overhead,risk,marketing,hpp,usedPct,profit,platform,dpp,ppn,grand,perUnit,pph,cash,roundingDelta,priceMode,displayPerUnit,adjustment,targetHpp};
+  renderReport({rows,baseRows,baseSubtotal,subtotal,overhead,risk,marketing,hpp,usedPct,profit,platform,dpp,ppn,grand,perUnit,pph,cash,professionalBase,professionalFee,netAfterProfessional,roundingDelta,priceMode,displayPerUnit,adjustment,targetHpp});
+  return {rows,baseRows,baseSubtotal,subtotal,overhead,risk,marketing,hpp,usedPct,profit,platform,dpp,ppn,grand,perUnit,pph,cash,professionalBase,professionalFee,netAfterProfessional,roundingDelta,priceMode,displayPerUnit,adjustment,targetHpp};
 }
 function renderReport(x){
   const f=getForm();
@@ -586,7 +653,7 @@ function renderReport(x){
       DPP sebelum PPN: <b>${fmt.format(x.dpp)}</b> · PPN: <b>${fmt.format(x.ppn)}</b><br/>
       <span style="font-size:20px"><b>Total penawaran: ${fmt.format(x.grand)}</b></span><br/>
       Harga per unit: <b>${fmt.format(x.perUnit)}</b><br/>
-      PPh dipotong bendahara/cashflow: <b>${fmt.format(x.pph)}</b> · Cash masuk setelah PPh: <b>${fmt.format(x.cash)}</b>
+      PPh dipotong bendahara/cashflow: <b>${fmt.format(x.pph)}</b> · Cash masuk setelah PPh: <b>${fmt.format(x.cash)}</b>${x.professionalFee>0?`<br/>Dasar setelah pajak: <b>${fmt.format(x.professionalBase)}</b> · Jasa profesional: <b>${fmt.format(x.professionalFee)}</b> · Bersih setelah jasa: <b>${fmt.format(x.netAfterProfessional)}</b>`:''}
     </div>
     <p class="disclaimer"><b>Catatan:</b> ${escapeHtml(f.taxNote)} Biaya pemasaran/agen hanya untuk biaya legal dan terdokumentasi, bukan biaya tidak resmi.</p>`;
 }
@@ -597,9 +664,28 @@ function printableCss(){ return `
 function docShell(title, body){
   return `<!doctype html><html><head><meta charset="utf-8"><title>${escapeHtml(title)}</title><style>${printableCss()}</style></head><body><div class="watermark">KSA HPP</div>${body}<script>window.onload=function(){setTimeout(function(){window.focus();window.print();},350)}<\/script></body></html>`;
 }
+function isMobilePrintMode(){
+  return /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) || window.matchMedia('(max-width: 780px)').matches || window.matchMedia('(display-mode: standalone)').matches;
+}
+function showMobilePrintDoc(title, body){
+  const target=$('mobilePrintContent');
+  if(!target){ toast('Mode cetak belum tersedia'); return; }
+  target.innerHTML=`<div class="watermark">KSA HPP</div>${body}`;
+  document.body.classList.add('mobilePrintActive');
+  document.body.dataset.oldTitle=document.title;
+  document.title='Cetak - '+title;
+  setTimeout(()=>window.scrollTo(0,0),50);
+  toast('Mode Cetak HP dibuka. Tekan Cetak / Simpan PDF.');
+}
+function closeMobilePrintDoc(){
+  document.body.classList.remove('mobilePrintActive');
+  $('mobilePrintContent').innerHTML='';
+  if(document.body.dataset.oldTitle){ document.title=document.body.dataset.oldTitle; delete document.body.dataset.oldTitle; }
+}
 function openPrintDoc(title, body){
+  if(isMobilePrintMode()){ showMobilePrintDoc(title, body); return; }
   const w = window.open('', '_blank');
-  if(!w){ toast('Popup diblokir. Izinkan popup untuk cetak PDF.'); return; }
+  if(!w){ showMobilePrintDoc(title, body); return; }
   w.document.open(); w.document.write(docShell(title, body)); w.document.close();
 }
 function kvTable(rows){ return `<table>${rows.map(r=>`<tr><td style="width:22%"><b>${escapeHtml(r[0])}</b></td><td>${escapeHtml(r[1])}</td><td style="width:22%"><b>${escapeHtml(r[2]||'')}</b></td><td>${escapeHtml(r[3]||'')}</td></tr>`).join('')}</table>`; }
@@ -657,6 +743,7 @@ function internalReportPdf(){
     <tr><td><b>Profit digunakan</b></td><td class="right">${fmt.format(x.profit)} (${pctText(x.usedPct)})</td><td><b>DPP sebelum PPN</b></td><td class="right">${fmt.format(x.dpp)}</td></tr>
     <tr class="total"><td><b>Total termasuk PPN</b></td><td class="right">${fmt.format(x.grand)}</td><td><b>Harga / unit</b></td><td class="right">${fmt.format(x.perUnit)}</td></tr>
     <tr><td><b>PPh dipotong/cashflow</b></td><td class="right">${fmt.format(x.pph)}</td><td><b>Cash setelah PPh</b></td><td class="right">${fmt.format(x.cash)}</td></tr>
+    <tr><td><b>Dasar setelah pajak</b></td><td class="right">${fmt.format(x.professionalBase)}</td><td><b>Jasa profesional opsional</b></td><td class="right">${fmt.format(x.professionalFee)}</td></tr>
   </tbody></table>
   <div class="box">Kesimpulan awal: harga penawaran yang aman dari data saat ini adalah <b>${fmt.format(x.perUnit)} per unit</b> atau <b>${fmt.format(x.grand)}</b> untuk ${qty} unit. Profit sudah dikunci maksimal 15%.</div>
   <h2>2. Asumsi Perhitungan</h2>
@@ -667,6 +754,7 @@ function internalReportPdf(){
     <tr><td>Profit maksimum</td><td>${pctText(num(f.profitCap))}</td><td>Sistem mengunci maksimal 15%</td></tr>
     <tr><td>PPN</td><td>${pctText(num(f.ppnPct))}</td><td>Parameter dapat diedit mengikuti status transaksi</td></tr>
     <tr><td>PPh dipotong</td><td>${pctText(num(f.pphPct))}</td><td>Simulasi cashflow dari DPP, bukan penambah harga jual</td></tr>
+    <tr><td>Jasa profesional opsional</td><td>${fmt.format(x.professionalFee)}</td><td>${escapeHtml(f.professionalNote||'Dihitung dari nilai bersih setelah PPN dan PPh')}</td></tr>
     <tr><td>Master HPP dasar</td><td>${fmt.format(x.baseSubtotal)}</td><td>Total komponen dari master harga sebelum distribusi struktur harga tayang</td></tr>
     <tr><td>Distribusi struktur harga</td><td>Sudah tersebar di detail biaya</td><td>Dialokasikan ke barang utama, aksesoris, logistik, QC/dokumen, dan purna jual sesuai struktur harga</td></tr>
   </tbody></table>
@@ -680,6 +768,9 @@ function internalReportPdf(){
     <tr><td>Total invoice termasuk PPN</td><td class="right">${fmt.format(x.grand)}</td><td>Harga dibayar/ditagihkan sesuai faktur dan kontrak</td></tr>
     <tr><td>PPh dipotong</td><td class="right">${fmt.format(x.pph)}</td><td>${pctText(num(f.pphPct))} dari DPP sesuai input, menjadi kredit pajak/cashflow</td></tr>
     <tr><td>Cash diterima setelah PPh</td><td class="right">${fmt.format(x.cash)}</td><td>Estimasi kas masuk sebelum penyelesaian pajak tahunan</td></tr>
+    <tr><td>Dasar setelah pajak</td><td class="right">${fmt.format(x.professionalBase)}</td><td>Total harga dikurangi PPN dan PPh</td></tr>
+    <tr><td>${escapeHtml(f.professionalName||'Jasa profesional opsional')}</td><td class="right">${fmt.format(x.professionalFee)}</td><td>Biaya opsional setelah pajak; dipakai hanya bila diinput</td></tr>
+    <tr><td>Bersih setelah jasa profesional</td><td class="right">${fmt.format(x.netAfterProfessional)}</td><td>Estimasi nilai bersih setelah jasa profesional</td></tr>
     <tr><td>Rasio profit terhadap total invoice</td><td class="right">${pctText(x.profit/x.grand*100)}</td><td>Margin tampak lebih kecil karena total sudah termasuk PPN</td></tr>
   </tbody></table>
   <h2>5. Sensitivitas Profit</h2>
@@ -702,17 +793,18 @@ function internalReportPdf(){
 
 function save(){ localStorage.setItem(stateKey, JSON.stringify(getForm())); toast('Data tersimpan di browser'); }
 function restore(){ const raw=localStorage.getItem(stateKey); if(raw){ try{setForm(JSON.parse(raw)); toast('Data lama dimuat'); return true;}catch(e){} } return false; }
-function exportCsv(){ const x=calc(), f=getForm(); const lines=[]; lines.push(['Kalkulator HPP Pompa Pengadaan']); lines.push(['Paket',f.projectName]); lines.push(['Satker',f.agency]); lines.push(['TA',f.year]); lines.push(['Produk',`${f.brand} ${f.pumpType}`]); lines.push([]); lines.push(['Komponen','Kategori','Qty','Harga Satuan','Total']); x.rows.forEach(r=>lines.push([r.name,r.cat,r.qty,r.price,r.total])); lines.push([]); [['Subtotal',x.subtotal],['Overhead',x.overhead],['Risiko',x.risk],['Pemasaran legal',x.marketing],['HPP',x.hpp],['Profit',x.profit],['DPP',x.dpp],['PPN',x.ppn],['Total Penawaran',x.grand],['Harga per unit',x.perUnit],['PPh Dipotong',x.pph],['Cash Setelah PPh',x.cash]].forEach(r=>lines.push(r)); const csv=lines.map(r=>r.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n'); const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='hpp-pompa-pengadaan.csv'; a.click(); URL.revokeObjectURL(a.href); }
-function copyReport(){ const x=calc(), f=getForm(); const text=`${f.projectName}\nProduk: ${f.brand} ${f.pumpType}\nQty: ${f.qtyUnit} unit\nHPP bersih: ${fmt.format(x.hpp)}\nProfit: ${fmt.format(x.profit)} (${x.usedPct.toFixed(1)}%)\nDPP: ${fmt.format(x.dpp)}\nPPN: ${fmt.format(x.ppn)}\nTotal penawaran: ${fmt.format(x.grand)}\nHarga per unit: ${fmt.format(x.perUnit)}\nPPh dipotong/cashflow: ${fmt.format(x.pph)}`; navigator.clipboard?.writeText(text); toast('Ringkasan disalin'); }
+function exportCsv(){ const x=calc(), f=getForm(); const lines=[]; lines.push(['Kalkulator HPP Pompa Pengadaan']); lines.push(['Paket',f.projectName]); lines.push(['Satker',f.agency]); lines.push(['TA',f.year]); lines.push(['Produk',`${f.brand} ${f.pumpType}`]); lines.push([]); lines.push(['Komponen','Kategori','Qty','Harga Satuan','Total']); x.rows.forEach(r=>lines.push([r.name,r.cat,r.qty,r.price,r.total])); lines.push([]); [['Subtotal',x.subtotal],['Overhead',x.overhead],['Risiko',x.risk],['Pemasaran legal',x.marketing],['HPP',x.hpp],['Profit',x.profit],['DPP',x.dpp],['PPN',x.ppn],['Total Penawaran',x.grand],['Harga per unit',x.perUnit],['PPh Dipotong',x.pph],['Cash Setelah PPh',x.cash],['Dasar Setelah Pajak',x.professionalBase],['Jasa Profesional Opsional',x.professionalFee],['Bersih Setelah Jasa Profesional',x.netAfterProfessional]].forEach(r=>lines.push(r)); const csv=lines.map(r=>r.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n'); const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='hpp-pompa-pengadaan.csv'; a.click(); URL.revokeObjectURL(a.href); }
+function copyReport(){ const x=calc(), f=getForm(); const text=`${f.projectName}\nProduk: ${f.brand} ${f.pumpType}\nQty: ${f.qtyUnit} unit\nHPP bersih: ${fmt.format(x.hpp)}\nProfit: ${fmt.format(x.profit)} (${x.usedPct.toFixed(1)}%)\nDPP: ${fmt.format(x.dpp)}\nPPN: ${fmt.format(x.ppn)}\nTotal penawaran: ${fmt.format(x.grand)}\nHarga per unit: ${fmt.format(x.perUnit)}\nPPh dipotong/cashflow: ${fmt.format(x.pph)}\nJasa profesional opsional: ${fmt.format(x.professionalFee)}\nBersih setelah jasa profesional: ${fmt.format(x.netAfterProfessional)}`; navigator.clipboard?.writeText(text); toast('Ringkasan disalin'); }
 function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
 
 function setTab(name){ document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name)); document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); $('tab-'+name).classList.add('active'); if(name==='partlist' && $('partBody') && !$('partBody').children.length) loadPartList(); window.scrollTo({top:0,behavior:'smooth'}); calc(); }
-const tabOrder=['data','biaya','partlist','setting','laporan'];
+const tabOrder=['data','biaya','partlist','setting','professional','laporan'];
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
 $('nextBtn').addEventListener('click',()=>{const cur=document.querySelector('.tab.active').dataset.tab; setTab(tabOrder[Math.min(tabOrder.length-1,tabOrder.indexOf(cur)+1)]);});
 $('prevBtn').addEventListener('click',()=>{const cur=document.querySelector('.tab.active').dataset.tab; setTab(tabOrder[Math.max(0,tabOrder.indexOf(cur)-1)]);});
 $('addRowBtn').addEventListener('click',()=>{makeRow();calc();}); $('loadPresetBtn').addEventListener('click',loadPreset); $('saveBtn').addEventListener('click',save); $('exportBtn').addEventListener('click',exportCsv); $('copyReportBtn').addEventListener('click',copyReport); $('structurePdfBtn').addEventListener('click',structureHargaPdf); $('internalPdfBtn').addEventListener('click',internalReportPdf); $('structurePdfBtn2').addEventListener('click',structureHargaPdf); $('internalPdfBtn2').addEventListener('click',internalReportPdf);
 $('resetBtn').addEventListener('click',()=>{ if(confirm('Reset semua data?')){ localStorage.removeItem(stateKey); loadMasterPrice(); calc(); toast('Data direset dari master harga'); }});
+$('mobilePrintNow').addEventListener('click',()=>setTimeout(()=>window.print(),120)); $('mobilePrintBack').addEventListener('click',closeMobilePrintDoc);
 $('loadPartBtn').addEventListener('click', loadPartList); $('addPartBtn').addEventListener('click',()=>{makePartRow({group:currentPumpProfile().group, qty:1}); calcPartList();}); $('applyPartBtn').addEventListener('click', applyPartListToHpp); $('printPartBtn').addEventListener('click', printPartListDoc); $('exportPartBtn').addEventListener('click', exportPartListCsv);
 document.querySelectorAll('input,select,textarea').forEach(el=>el.addEventListener('input',calc));
 $('qtyUnit').addEventListener('input', syncMasterQty);
