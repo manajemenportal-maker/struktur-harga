@@ -288,7 +288,7 @@
     <div class="mobilePrintToolbar noPrint">
       <button class="btnPrimary" id="mobilePrintNow">🖨️ Cetak / Simpan PDF</button>
       <button class="btnGhost" id="mobilePrintBack">← Kembali ke Aplikasi</button>
-      <span style="align-self:center;font-size:12px;opacity:.9">Di HP: pilih Print/Cetak, lalu pilih Save as PDF bila tersedia.</span>
+      <span style="align-self:center;font-size:12px;opacity:.9">Mode ini untuk cetak manual. Struktur Harga dan Internal Report di HP dibuat sebagai file PDF langsung.</span>
     </div>
     <div id="mobilePrintContent"></div>
   </div>
@@ -300,7 +300,7 @@
 const $ = (id)=>document.getElementById(id);
 const fmt = new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0});
 const num = (v)=> Number(String(v ?? 0).replace(/[^0-9.-]/g,'')) || 0;
-const stateKey = 'hpp_pompa_pengadaan_pwa_v18_mobile_print';
+const stateKey = 'hpp_pompa_pengadaan_pwa_v19_direct_pdf_hp';
 let deferredPrompt = null;
 
 const defaultRows = [
@@ -690,7 +690,114 @@ function openPrintDoc(title, body){
 }
 function kvTable(rows){ return `<table>${rows.map(r=>`<tr><td style="width:22%"><b>${escapeHtml(r[0])}</b></td><td>${escapeHtml(r[1])}</td><td style="width:22%"><b>${escapeHtml(r[2]||'')}</b></td><td>${escapeHtml(r[3]||'')}</td></tr>`).join('')}</table>`; }
 function outputHeader(title, subtitle){ const f=getForm(); const addr=escapeHtml(f.officeAddress || 'Alamat kantor PT/Penyedia'); return `<div class="kop"><div>${escapeHtml(f.providerName||'PENYEDIA')}<br><span class="meta">${addr}</span></div><div class="right meta">Tanggal cetak: ${new Date().toLocaleDateString('id-ID')}<br>Mode: ${escapeHtml(f.method)}</div></div><h1>${escapeHtml(title)}</h1><div class="sub">${escapeHtml(subtitle)}</div>`; }
+
+function asciiPdfText(v){
+  return String(v ?? '')
+    .replace(/\n/g,' ')
+    .replace(/[–—−]/g,'-')
+    .replace(/[×]/g,'x')
+    .replace(/[·•]/g,'-')
+    .replace(/[“”]/g,'"')
+    .replace(/[’]/g,"'")
+    .normalize('NFKD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^\x20-\x7E]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+function pdfEscape(v){ return asciiPdfText(v).replace(/\\/g,'\\\\').replace(/\(/g,'\\(').replace(/\)/g,'\\)'); }
+function pdfFileName(name){ return asciiPdfText(name).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')+'.pdf'; }
+function createPdfBuilder(title){
+  const pageW=595, pageH=842, margin=42;
+  const pages=[[]]; let y=pageH-48;
+  function page(){ return pages[pages.length-1]; }
+  function newPage(){ pages.push([]); y=pageH-48; }
+  function addRaw(text, opt={}){
+    const size=opt.size||9.5, lh=opt.lineH||13, x=opt.x||margin;
+    if(y<margin+24) newPage();
+    page().push({text:asciiPdfText(text), x, y, size, bold:!!opt.bold});
+    y-=lh;
+  }
+  function add(text='', opt={}){
+    const size=opt.size||9.5, x=opt.x||margin;
+    const max=Math.max(34, Math.floor((pageW-x-margin)/(size*.52)));
+    String(text??'').split(/\n/).forEach(part=>{
+      const words=asciiPdfText(part).split(' '); let line='';
+      words.forEach(w=>{
+        if((line+' '+w).trim().length>max){ addRaw(line,opt); line=w; }
+        else line=(line+' '+w).trim();
+      });
+      addRaw(line||' ',opt);
+    });
+  }
+  function gap(n=6){ y-=n; if(y<margin+24) newPage(); }
+  function heading(t){ gap(4); add(t,{bold:true,size:12,lineH:16}); }
+  function titleBlock(){ add(title,{bold:true,size:15,lineH:20}); add('Tanggal cetak: '+new Date().toLocaleDateString('id-ID'),{size:9,lineH:13}); gap(5); }
+  function kv(k,v){ add(k+': '+v,{size:9.5,lineH:13}); }
+  titleBlock();
+  return {pages,add,gap,heading,kv};
+}
+function buildPdfBlob(pages){
+  const objects=[];
+  function obj(s){ objects.push(s); return objects.length; }
+  obj('<< /Type /Catalog /Pages 2 0 R >>');
+  obj('__PAGES__');
+  obj('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>');
+  obj('<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>');
+  const kids=[];
+  pages.forEach(pg=>{
+    const pageObjNo=objects.length+1, contentObjNo=objects.length+2; kids.push(pageObjNo+' 0 R');
+    const stream=pg.map(t=>`BT /${t.bold?'F2':'F1'} ${t.size.toFixed(1)} Tf 1 0 0 1 ${t.x.toFixed(1)} ${t.y.toFixed(1)} Tm (${pdfEscape(t.text)}) Tj ET`).join('\n');
+    obj(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents ${contentObjNo} 0 R >>`);
+    obj(`<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`);
+  });
+  objects[1]=`<< /Type /Pages /Kids [${kids.join(' ')}] /Count ${pages.length} >>`;
+  let pdf='%PDF-1.4\n% Direct PDF from HPP Pompa App\n';
+  const offsets=[0];
+  objects.forEach((o,i)=>{ offsets.push(pdf.length); pdf+=`${i+1} 0 obj\n${o}\nendobj\n`; });
+  const xref=pdf.length;
+  pdf+=`xref\n0 ${objects.length+1}\n0000000000 65535 f \n`;
+  for(let i=1;i<offsets.length;i++) pdf+=String(offsets[i]).padStart(10,'0')+' 00000 n \n';
+  pdf+=`trailer\n<< /Size ${objects.length+1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
+  return new Blob([pdf],{type:'application/pdf'});
+}
+function downloadBlob(blob, filename){
+  const url=URL.createObjectURL(blob); const a=document.createElement('a');
+  a.href=url; a.download=filename; a.target='_blank'; document.body.appendChild(a); a.click();
+  setTimeout(()=>{URL.revokeObjectURL(url); a.remove();},3000);
+}
+function downloadStructureHargaDirectPdf(){
+  const x=calc(), f=getForm(), qty=Math.max(1,num(f.qtyUnit));
+  const b=createPdfBuilder('FORM STRUKTUR PEMBENTUK HARGA PRODUK');
+  b.kv('Penyedia', f.providerName||''); b.kv('Alamat', f.officeAddress||''); b.kv('Paket/Kegiatan', f.projectName||''); b.kv('Satker/Instansi', f.agency||''); b.kv('TA / Metode', `${f.year||''} / ${f.method||''}`); b.kv('Produk', `${f.brand||''} ${f.pumpType||''}`); b.kv('Jumlah', qty+' unit'); b.kv('Harga tayang per unit', fmt.format(x.perUnit)); b.gap();
+  b.heading('A. Struktur Biaya Produk');
+  x.rows.forEach((r,i)=>b.add(`${i+1}. ${r.cat} - ${r.name} | Qty ${r.qty} | Harga ${fmt.format(r.price)} | Total ${fmt.format(r.total)}`));
+  b.gap(); b.heading('B. Rekap Harga');
+  [['Subtotal biaya detail',x.subtotal],['HPP bersih',x.hpp],['Profit digunakan '+pctText(x.usedPct),x.profit],['DPP sebelum PPN',x.dpp],['PPN',x.ppn],['Total penawaran termasuk PPN',x.grand],['Harga per unit',x.perUnit],['PPh dipotong/cashflow',x.pph],['Cash setelah PPh',x.cash]].forEach(r=>b.kv(r[0],fmt.format(r[1])));
+  if(x.professionalFee>0){ b.heading('C. Jasa Profesional Opsional'); b.kv('Dasar setelah pajak',fmt.format(x.professionalBase)); b.kv(f.professionalName||'Jasa profesional',fmt.format(x.professionalFee)); b.kv('Bersih setelah jasa profesional',fmt.format(x.netAfterProfessional)); }
+  b.gap(); b.heading('Catatan Kepatuhan'); b.add('Komponen harga wajib didukung bukti biaya saat klarifikasi/negosiasi. Biaya pemasaran/agen dan jasa profesional hanya boleh digunakan bila legal, wajar, dan terdokumentasi. Jika instansi menyediakan format resmi, data dari output ini dipindahkan ke format tersebut.');
+  downloadBlob(buildPdfBlob(b.pages), pdfFileName('struktur harga produk '+(f.providerName||'penyedia')));
+  toast('PDF struktur harga dibuat');
+}
+function downloadInternalReportDirectPdf(){
+  const x=calc(), f=getForm(), qty=Math.max(1,num(f.qtyUnit));
+  const b=createPdfBuilder('INTERNAL REPORT HPP POMPA');
+  b.kv('Penyedia', f.providerName||''); b.kv('Alamat', f.officeAddress||''); b.kv('Produk', `${f.brand||''} ${f.pumpType||''}`); b.kv('Jumlah', qty+' unit'); b.kv('Sumber master harga', f.masterSource||''); b.gap();
+  b.heading('1. Executive Summary');
+  b.kv('Harga per unit',fmt.format(x.perUnit)); b.kv('Total termasuk PPN',fmt.format(x.grand)); b.kv('HPP bersih',fmt.format(x.hpp)); b.kv('Profit digunakan',`${fmt.format(x.profit)} (${pctText(x.usedPct)})`); b.kv('DPP sebelum PPN',fmt.format(x.dpp)); b.kv('PPN',fmt.format(x.ppn)); b.kv('PPh dipotong',fmt.format(x.pph)); b.kv('Cash setelah PPh',fmt.format(x.cash)); b.kv('Dasar setelah pajak',fmt.format(x.professionalBase)); b.kv('Jasa profesional opsional',fmt.format(x.professionalFee)); b.kv('Bersih setelah jasa profesional',fmt.format(x.netAfterProfessional));
+  b.heading('2. Breakdown HPP Detail');
+  x.rows.forEach((r,i)=>b.add(`${i+1}. ${r.cat} - ${r.name} = ${fmt.format(r.total)} (${x.subtotal?pctText((r.total/x.subtotal)*100):'0,0%'})`));
+  b.heading('3. Asumsi Perhitungan');
+  b.add(`Overhead ${pctText(num(f.overheadPct))}; Risiko ${pctText(num(f.riskPct))}; PPN ${pctText(num(f.ppnPct))}; PPh ${pctText(num(f.pphPct))}; Profit maksimal ${pctText(num(f.profitCap))}.`);
+  b.add('Jasa profesional bersifat opsional dan dihitung dari nilai bersih setelah PPN dan PPh. Jika tidak diinput, nilainya 0 dan tidak mempengaruhi harga penawaran.');
+  b.heading('4. Checklist Bukti Dukung');
+  ['Quotation supplier pompa per tipe','Brosur spesifikasi dan foto produk','Daftar aksesoris standar','Simulasi ongkir ke lokasi dinas/satker','Dokumen garansi dan layanan purna jual','Dokumen pajak NPWP/PKP dan perhitungan PPN/PPh'].forEach((t,i)=>b.add(`${i+1}. ${t}`));
+  b.heading('5. Rekomendasi Internal');
+  b.add('Kunci harga supplier sampai masa evaluasi selesai, pisahkan arsip harga barang/ongkir/garansi, jangan memasukkan biaya tidak resmi, dan validasi pajak sebelum submit final.');
+  downloadBlob(buildPdfBlob(b.pages), pdfFileName('internal report hpp pompa '+(f.providerName||'penyedia')));
+  toast('PDF internal report dibuat');
+}
 function structureHargaPdf(){
+  if(isMobilePrintMode()){ downloadStructureHargaDirectPdf(); return; }
   const x=calc(), f=getForm(), qty=Math.max(1,num(f.qtyUnit));
   const rowsHtml=x.rows.map((r,i)=>`<tr><td class="center">${i+1}</td><td>${escapeHtml(r.name)}</td><td>${escapeHtml(r.cat)}</td><td class="right">${r.qty}</td><td class="right">${fmt.format(r.price)}</td><td class="right">${fmt.format(r.total)}</td><td class="right">${fmt.format(r.total/qty)}</td></tr>`).join('');
   const body = outputHeader('FORM STRUKTUR PEMBENTUK HARGA PRODUK','Lampiran struktur pembentuk harga produk untuk pengadaan Kementerian/Dinas - format kerja penyedia') + `
@@ -728,6 +835,7 @@ function structureHargaPdf(){
   openPrintDoc('Struktur Harga Produk', body);
 }
 function internalReportPdf(){
+  if(isMobilePrintMode()){ downloadInternalReportDirectPdf(); return; }
   const x=calc(), f=getForm(), qty=Math.max(1,num(f.qtyUnit));
   const rowsHtml=x.rows.map((r,i)=>`<tr><td class="center">${i+1}</td><td>${escapeHtml(r.name)}</td><td>${escapeHtml(r.cat)}</td><td class="right">${fmt.format(r.total)}</td><td class="right">${pctText((r.total/x.subtotal)*100)}</td></tr>`).join('');
   const sens = [8,10,12.5,15].map(pr=>{ const prProfit=x.hpp*pr/100; const prDpp=x.hpp+prProfit; const prPpn=prDpp*num(f.ppnPct)/100; const step=num(f.rounding); const unit=roundBy((prDpp+prPpn)/qty, step, f.roundingMode); const total=unit*qty; return `<tr><td>${pctText(pr)}</td><td class="right">${fmt.format(prDpp)}</td><td class="right">${fmt.format(prPpn)}</td><td class="right">${fmt.format(total)}</td><td class="right">${fmt.format(unit)}</td><td class="right">${fmt.format(total-x.grand)}</td></tr>`; }).join('');
