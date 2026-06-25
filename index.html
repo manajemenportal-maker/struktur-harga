@@ -275,7 +275,6 @@
             <h2>Anggaran Semua Produk</h2>
             <div class="rightActions noPrint">
               <button class="btnPrimary" id="budgetCalcBtn">🔄 Hitung Anggaran</button>
-              <button class="btnGhost" id="budgetExampleBtn">Contoh 150/50</button>
               <button class="btnGhost" id="budgetClearBtn">Reset Qty</button>
               <button class="btnGhost" id="budgetPrintBtn">🖨️ Cetak Anggaran</button>
               <button class="btnGhost" id="budgetPdfBtn">📄 PDF Anggaran</button>
@@ -284,7 +283,7 @@
           </div>
           <div class="panelBody">
             <p class="hint">Menu ini untuk menghitung kebutuhan dana gabungan seluruh tipe produk. Isi jumlah unit per tipe, lalu sistem menghitung dana HPP riil/master data, total harga tayang, potongan pajak + PPh, fee broker/agen resmi, sisa masuk perusahaan, dan estimasi laba/rugi gabungan.</p>
-            <p class="hint"><b>Input qty:</b> kolom Qty dapat diketik langsung dari keyboard HP/laptop. Contoh: 150, 500, 1000, 2500.</p>
+            <p class="hint"><b>Input qty:</b> kolom Qty dapat diketik langsung dari keyboard HP/laptop untuk jumlah kecil maupun besar.</p>
             <div class="formGrid" style="margin-bottom:12px">
               <div class="field"><label>Pajak + PPh Gabungan (%)</label><input id="budgetTaxPct" type="number" min="0" step="0.1" value="13.5" /></div>
               <div class="field"><label>Fee Broker/Agen Resmi (%)</label><input id="budgetBrokerPct" type="number" min="0" step="0.1" value="30" /></div>
@@ -368,7 +367,7 @@
 const $ = (id)=>document.getElementById(id);
 const fmt = new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0});
 const num = (v)=> Number(String(v ?? 0).replace(/[^0-9.-]/g,'')) || 0;
-const stateKey = 'hpp_pompa_pengadaan_pwa_v24_budget_qty_input';
+const stateKey = 'hpp_pompa_pengadaan_pwa_v25_no_example_button';
 let deferredPrompt = null;
 
 const defaultRows = [
@@ -806,14 +805,6 @@ function calcBudget(){
     Laba/rugi riil setelah HPP master: <b style="color:${totalProfit>=0?'#166534':'#b91c1c'}">${fmt.format(totalProfit)}</b> · Margin terhadap sisa masuk PT: <b>${pctText(margin)}</b>`;
   return {rows,totalQty,totalHpp,totalTayang,taxPct,totalTax,totalAfterTax,brokerPct,brokerNominal,brokerTotal,totalCompany,totalProfit,margin};
 }
-function setBudgetExample(){
-  BUDGET_PRODUCTS.forEach(key=>{ const el=$('budgetQty_'+productSlug(key)); if(el) el.value=0; });
-  const diesel3=$('budgetQty_'+productSlug('KSA-80D | Pompa Diesel 3 inch'));
-  const diesel6=$('budgetQty_'+productSlug('KSA-160D | Pompa Diesel 6 inch'));
-  if(diesel3) diesel3.value=150;
-  if(diesel6) diesel6.value=50;
-  calcBudget(); toast('Contoh anggaran 150 unit 3 inch dan 50 unit 6 inch dimuat');
-}
 function clearBudgetQty(){ BUDGET_PRODUCTS.forEach(key=>{ const el=$('budgetQty_'+productSlug(key)); if(el) el.value=0; }); calcBudget(); toast('Qty anggaran dikosongkan'); }
 function exportBudgetCsv(){
   const b=calcBudget(), f=getForm(); if(!b) return;
@@ -1246,7 +1237,7 @@ $('prevBtn').addEventListener('click',()=>{const cur=document.querySelector('.ta
 $('addRowBtn').addEventListener('click',()=>{makeRow();calc();}); $('loadPresetBtn').addEventListener('click',loadPreset); $('saveBtn').addEventListener('click',save); $('exportBtn').addEventListener('click',exportCsv); $('copyReportBtn').addEventListener('click',copyReport); $('structurePdfBtn').addEventListener('click',structureHargaPdf); $('internalPdfBtn').addEventListener('click',internalReportPdf); $('structurePdfBtn2').addEventListener('click',structureHargaPdf); $('internalPdfBtn2').addEventListener('click',internalReportPdf);
 $('resetBtn').addEventListener('click',()=>{ if(confirm('Reset semua data?')){ localStorage.removeItem(stateKey); loadMasterPrice(); calc(); toast('Data direset dari master harga'); }});
 $('mobilePrintNow').addEventListener('click',()=>setTimeout(()=>window.print(),120)); $('mobilePrintBack').addEventListener('click',closeMobilePrintDoc);
-$('loadPartBtn').addEventListener('click', loadPartList); $('addPartBtn').addEventListener('click',()=>{makePartRow({group:currentPumpProfile().group, qty:1}); calcPartList();}); $('applyPartBtn').addEventListener('click', applyPartListToHpp); $('printPartBtn').addEventListener('click', printPartListDoc); $('exportPartBtn').addEventListener('click', exportPartListCsv); if($('refreshRealBtn')) $('refreshRealBtn').addEventListener('click',()=>{calc(); toast('Perhitungan HPP riil diperbarui');}); if($('exportRealBtn')) $('exportRealBtn').addEventListener('click',exportRealHppCsv); if($('budgetCalcBtn')) $('budgetCalcBtn').addEventListener('click',()=>{calcBudget(); toast('Anggaran semua produk dihitung');}); if($('budgetExampleBtn')) $('budgetExampleBtn').addEventListener('click',setBudgetExample); if($('budgetClearBtn')) $('budgetClearBtn').addEventListener('click',clearBudgetQty); if($('budgetExportBtn')) $('budgetExportBtn').addEventListener('click',exportBudgetCsv); if($('budgetPrintBtn')) $('budgetPrintBtn').addEventListener('click',printBudgetDoc); if($('budgetPdfBtn')) $('budgetPdfBtn').addEventListener('click',downloadBudgetDirectPdf);
+$('loadPartBtn').addEventListener('click', loadPartList); $('addPartBtn').addEventListener('click',()=>{makePartRow({group:currentPumpProfile().group, qty:1}); calcPartList();}); $('applyPartBtn').addEventListener('click', applyPartListToHpp); $('printPartBtn').addEventListener('click', printPartListDoc); $('exportPartBtn').addEventListener('click', exportPartListCsv); if($('refreshRealBtn')) $('refreshRealBtn').addEventListener('click',()=>{calc(); toast('Perhitungan HPP riil diperbarui');}); if($('exportRealBtn')) $('exportRealBtn').addEventListener('click',exportRealHppCsv); if($('budgetCalcBtn')) $('budgetCalcBtn').addEventListener('click',()=>{calcBudget(); toast('Anggaran semua produk dihitung');}); if($('budgetClearBtn')) $('budgetClearBtn').addEventListener('click',clearBudgetQty); if($('budgetExportBtn')) $('budgetExportBtn').addEventListener('click',exportBudgetCsv); if($('budgetPrintBtn')) $('budgetPrintBtn').addEventListener('click',printBudgetDoc); if($('budgetPdfBtn')) $('budgetPdfBtn').addEventListener('click',downloadBudgetDirectPdf);
 document.querySelectorAll('input,select,textarea').forEach(el=>el.addEventListener('input',calc));
 $('qtyUnit').addEventListener('input', syncMasterQty);
 $('displayPrice').addEventListener('input', calc);
