@@ -110,7 +110,9 @@
               <button class="tab" data-tab="partlist">3. Part List Unit + Engine</button>
               <button class="tab" data-tab="setting">4. Pajak & Margin</button>
               <button class="tab" data-tab="professional">5. Jasa Profesional</button>
-              <button class="tab" data-tab="laporan">6. Laporan</button>
+              <button class="tab" data-tab="real">6. HPP Riil</button>
+              <button class="tab" data-tab="budget">7. Anggaran Semua Produk</button>
+              <button class="tab" data-tab="laporan">8. Laporan</button>
             </div>
           </div>
         </div>
@@ -240,6 +242,68 @@
           </div>
         </section>
 
+        <section class="panel section" id="tab-real">
+          <div class="panelHead">
+            <h2>Perhitungan HPP Riil & Sisa Keuntungan</h2>
+            <div class="rightActions noPrint">
+              <button class="btnPrimary" id="refreshRealBtn">↻ Hitung Ulang</button>
+              <button class="btnGhost" id="exportRealBtn">CSV HPP Riil</button>
+            </div>
+          </div>
+          <div class="panelBody">
+            <p class="hint">Menu internal ini menghitung sisa nilai usaha dari harga tayang final. Alurnya: harga tayang dikurangi pajak & PPh gabungan, lalu dikurangi fee broker/agen resmi, kemudian dibandingkan dengan HPP riil dari master data.</p>
+            <div class="formGrid">
+              <div class="field"><label>Pajak + PPh Gabungan (%)</label><input id="realTaxPct" type="number" min="0" step="0.1" value="13.5" /></div>
+              <div class="field"><label>Fee Broker / Agen Resmi (%)</label><input id="brokerPct" type="number" min="0" step="0.1" value="30" /></div>
+              <div class="field"><label>Fee Broker Nominal</label><input id="brokerNominal" type="number" min="0" step="1000" value="0" /></div>
+              <div class="field"><label>Sumber HPP Riil</label><input id="realSource" value="Master data produk" readonly /></div>
+              <div class="field span4"><label>Catatan Perhitungan Riil</label><textarea id="realNote">Perhitungan ini untuk analisa internal. Fee broker/agen hanya boleh digunakan bila resmi, legal, tercatat, dan dapat didukung dokumen kerja sama atau invoice.</textarea></div>
+            </div>
+            <div class="formula" style="margin-top:14px">
+              <b>Formula internal:</b><br/>
+              <code>Nilai setelah pajak = Harga tayang total - (Harga tayang total × 13,5%)</code><br/>
+              <code>Fee broker = Nilai setelah pajak × 30% + nominal broker</code><br/>
+              <code>Sisa masuk perusahaan = Nilai setelah pajak - Fee broker</code><br/>
+              <code>Laba/rugi riil = Sisa masuk perusahaan - HPP riil master data</code>
+            </div>
+            <div id="realHppArea" style="margin-top:14px"></div>
+          </div>
+        </section>
+
+        <section class="panel section" id="tab-budget">
+          <div class="panelHead">
+            <h2>Anggaran Semua Produk</h2>
+            <div class="rightActions noPrint">
+              <button class="btnPrimary" id="budgetCalcBtn">🔄 Hitung Anggaran</button>
+              <button class="btnGhost" id="budgetExampleBtn">Contoh 150/50</button>
+              <button class="btnGhost" id="budgetClearBtn">Reset Qty</button>
+              <button class="btnGhost" id="budgetPrintBtn">🖨️ Cetak Anggaran</button>
+              <button class="btnGhost" id="budgetPdfBtn">📄 PDF Anggaran</button>
+              <button class="btnGhost" id="budgetExportBtn">CSV Anggaran</button>
+            </div>
+          </div>
+          <div class="panelBody">
+            <p class="hint">Menu ini untuk menghitung kebutuhan dana gabungan seluruh tipe produk. Isi jumlah unit per tipe, lalu sistem menghitung dana HPP riil/master data, total harga tayang, potongan pajak + PPh, fee broker/agen resmi, sisa masuk perusahaan, dan estimasi laba/rugi gabungan.</p>
+            <div class="formGrid" style="margin-bottom:12px">
+              <div class="field"><label>Pajak + PPh Gabungan (%)</label><input id="budgetTaxPct" type="number" min="0" step="0.1" value="13.5" /></div>
+              <div class="field"><label>Fee Broker/Agen Resmi (%)</label><input id="budgetBrokerPct" type="number" min="0" step="0.1" value="30" /></div>
+              <div class="field"><label>Fee Broker Nominal Tambahan</label><input id="budgetBrokerNominal" type="number" min="0" step="1000" value="0" /></div>
+              <div class="field"><label>Sumber Harga</label><input value="Harga tayang + HPP master data" readonly /></div>
+              <div class="field span4"><label>Catatan Anggaran Gabungan</label><textarea id="budgetNote">Menu ini untuk analisa internal kebutuhan dana produksi dan proyeksi sisa hasil usaha. Fee broker/agen hanya boleh dipakai untuk kerja sama resmi, sah, tertulis, dan terdokumentasi.</textarea></div>
+            </div>
+            <div id="budgetSummary" class="formula" style="margin-bottom:12px">Isi jumlah unit untuk melihat total kebutuhan dana.</div>
+            <div class="tableWrap">
+              <table class="costTable" id="budgetTable">
+                <thead>
+                  <tr><th style="width:220px">Produk</th><th style="width:130px">HPP Master / Unit</th><th style="width:130px">Harga Tayang / Unit</th><th style="width:100px">Qty</th><th style="width:140px">Dana HPP</th><th style="width:140px">Total Tayang</th><th style="width:130px">Pajak + PPh</th><th style="width:130px">Fee Broker</th><th style="width:150px">Sisa Masuk PT</th><th style="width:150px">Laba/Rugi Riil</th></tr>
+                </thead>
+                <tbody id="budgetBody"></tbody>
+              </table>
+            </div>
+            <p class="disclaimer" style="margin-top:10px"><b>Catatan:</b> angka di menu ini bersifat internal untuk menyusun kebutuhan modal produksi/pengadaan. Pastikan semua biaya broker/agen, pajak, HPP, dan bukti harga didukung dokumen resmi.</p>
+          </div>
+        </section>
+
         <section class="panel section" id="tab-laporan">
           <div class="panelHead">
             <h2>Laporan Ringkas Penawaran</h2>
@@ -268,6 +332,9 @@
           <div class="sumRow"><span>Dasar setelah pajak</span><strong id="sProfessionalBase">Rp0</strong></div>
           <div class="sumRow"><span>Jasa profesional</span><strong id="sProfessionalFee">Rp0</strong></div>
           <div class="sumRow"><span>Bersih setelah jasa</span><strong id="sNetAfterProfessional">Rp0</strong></div>
+          <div class="sumRow"><span>Broker/agen resmi</span><strong id="sBrokerFee">Rp0</strong></div>
+          <div class="sumRow"><span>Sisa masuk perusahaan</span><strong id="sCompanyShare">Rp0</strong></div>
+          <div class="sumRow"><span>Laba/rugi riil</span><strong id="sRealProfit">Rp0</strong></div>
         </div>
         <div class="note">
           <b>Pengingat penting:</b> profit 15% di sini adalah batas internal aplikasi. Tetap cek dokumen tender/e-katalog, status pajak, dan aturan instansi sebelum harga final diajukan.
@@ -300,7 +367,7 @@
 const $ = (id)=>document.getElementById(id);
 const fmt = new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0});
 const num = (v)=> Number(String(v ?? 0).replace(/[^0-9.-]/g,'')) || 0;
-const stateKey = 'hpp_pompa_pengadaan_pwa_v19_direct_pdf_hp';
+const stateKey = 'hpp_pompa_pengadaan_pwa_v23_budget_pdf';
 let deferredPrompt = null;
 
 const defaultRows = [
@@ -356,12 +423,19 @@ const MASTER_PRICE = {
     ]
   },
   'KSA-160D | Pompa Diesel 6 inch': {
-    label: 'KSA-160D Diesel 6 inch', source: 'master product pompa new.xlsx - HPP N STOK + total HPP struktur 6 inch', ppn: 12,
+    label: 'KSA-160D Diesel 6 inch', source: 'master product pompa new.xlsx - HPP riil detail 6 inch', ppn: 12,
     bundle: 'Selang hisap 6M, selang keluaran 50M, saringan, clamp, coupling, toolkit, manual',
-    note: 'Basis master: komponen HPP N STOK 6 inch Rp13.197.200 + biaya perakitan/overhead/transport/testing gabungan agar sesuai Total HPP file Rp14.521.000.',
+    note: 'Basis master: HPP riil 6 inch dibuat detail per komponen seperti format 3 inch, memuat unit pompa + engine, selang keluaran, selang hisap, hard case/packing, label/manual, perakitan, overhead, transportasi, testing, garansi, dan biaya tak terduga.',
     items: [
-      ['Pump unit 6 inch + outlet hose + inlet hose + hard case + label/manual','Barang utama',13197200],
-      ['Biaya perakitan, overhead, transportasi, testing, garansi','Biaya produksi',1323800]
+      ['Pump unit 6 inch + engine diesel','Barang utama',10500000],
+      ['Selang keluaran 6 inch x 50M rubber hose','Aksesoris',1100000],
+      ['Selang hisap 6 inch x 6M spiral hose','Aksesoris',1222200],
+      ['Hard case / packing 6 inch','Packing',300000],
+      ['Label product dan manual book 6 inch','Kelengkapan',75000],
+      ['Tenaga kerja perakitan','Tenaga kerja',470000],
+      ['Overhead listrik, peralatan, bengkel, administrasi','Overhead',616000],
+      ['Transportasi dan kemasan','Logistik',600000],
+      ['Lain-lain: testing, garansi, biaya tak terduga','QC & dokumen',625000]
     ]
   },
   'KSA-100G | Pompa Bensin 4 inch': {
@@ -388,6 +462,16 @@ const DISPLAY_PRICE = {
 };
 
 function getDisplayPriceForSelected(){ return DISPLAY_PRICE[$('pumpType').value] || 0; }
+const BUDGET_PRODUCTS = [
+  'KSA-80G | Pompa Bensin 3 inch',
+  'KSA-80D | Pompa Diesel 3 inch',
+  'KSA-100G | Pompa Bensin 4 inch',
+  'KSA-100D | Pompa Diesel 4 inch',
+  'KSA-160D | Pompa Diesel 6 inch'
+];
+function productSlug(key){ return String(key).replace(/[^A-Za-z0-9]+/g,'_').replace(/^_+|_+$/g,''); }
+function masterUnitHppByKey(key){ const m=MASTER_PRICE[key]; return (m && Array.isArray(m.items)) ? m.items.reduce((s,item)=>s+num(item[2]),0) : 0; }
+function productLabelByKey(key){ return MASTER_PRICE[key]?.label || key; }
 
 const PARTLIST_MASTER = [{"group":"3 inch","itemCode":"080.01.02.01","itemNo":"1","name":"PUMP COVER","code":"080.01.02.01","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.02","itemNo":"2","name":"LARGE O-RING","code":"080.01.02.02","qty":1,"spec":"rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.03","itemNo":"3","name":"SEALING WASHER (M8 Nylon)","code":"999.01.50","qty":4,"spec":"M8 Nylon Ring","subGroup":"BOLT","partCode":"999.01.50","price":0},{"group":"3 inch","itemCode":"080.01.02.04","itemNo":"4","name":"MOUNT BOLT (M8X50)","code":"999.01.03","qty":4,"spec":"M8 X 50","subGroup":"BOLT","partCode":"999.01.03","price":0},{"group":"3 inch","itemCode":"080.01.02.05","itemNo":"5","name":"MECHANICAL SEAL","code":"080.01.02.03","qty":1,"spec":"","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.06","itemNo":"6","name":"IMPELLER","code":"080.01.02.04","qty":1,"spec":"besi cor","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.07","itemNo":"7","name":"IMPELLER HOUSE","code":"080.01.02.05","qty":1,"spec":"besi cor","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.08","itemNo":"8","name":"SMALL O-RING (Rubber Seal)","code":"080.01.02.06","qty":1,"spec":"rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.09","itemNo":"9","name":"PUMP BODY","code":"080.01.02.07","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.10","itemNo":"10","name":"OULET SEAL (Gasket)","code":"080.01.02.08","qty":1,"spec":"gasket rubber","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.11","itemNo":"12","name":"OUTLET CONNECTION BOLT (M8X25)","code":"999.01.05","qty":4,"spec":"M10 x 25","subGroup":"BOLT","partCode":"999.01.05","price":0},{"group":"3 inch","itemCode":"080.01.02.12","itemNo":"13","name":"3/4\" PLUG O-RING","code":"080.01.02.09","qty":2,"spec":"3/4 inch rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.13","itemNo":"14","name":"3/4\" PLUG","code":"080.01.02.10","qty":2,"spec":"3/4 inch Plastic Plug","subGroup":"ACESORIES","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.14","itemNo":"18","name":"OUTLET FLANGE","code":"080.01.02.11","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.15","itemNo":"19","name":"INLET FLANGE","code":"080.01.02.12","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.16","itemNo":"20","name":"INLET CHECK VALVE","code":"080.01.02.13","qty":1,"spec":"rubber","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.17","itemNo":"21","name":"INLET CONNECTION BOLT (M10X20)","code":"999.01.04","qty":3,"spec":"M10 x 20","subGroup":"BOLT","partCode":"999.01.04","price":0},{"group":"3 inch","itemCode":"080.01.02.18","itemNo":"22","name":"PUMP BODY BOLT (M10X20)","code":"999.01.04","qty":4,"spec":"M10 x 20","subGroup":"BOLT","partCode":"999.01.04","price":0},{"group":"3 inch","itemCode":"080.01.02.19","itemNo":"24","name":"SUCTION STRAINER CLAMP","code":"080.01.02.14","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.20","itemNo":"25","name":"SUCTION STRAINER","code":"080.01.02.15","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.21","itemNo":"26","name":"SHAFT BOLT (M8X25)","code":"999.01.01","qty":1,"spec":"M8 x 25","subGroup":"BOLT","partCode":"999.01.01","price":0},{"group":"3 inch","itemCode":"080.01.02.22","itemNo":"27","name":"SHAFT BOLT WASHER (M8 Nylon)","code":"999.01.50","qty":1,"spec":"M8 Nylon Ring","subGroup":"BOLT","partCode":"999.01.50","price":0},{"group":"3 inch","itemCode":"080.01.02.23","itemNo":"28","name":"KEY / SPI","code":"080.01.02.16","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.24","itemNo":"29","name":"HOSE FLANGE","code":"080.01.02.17","qty":2,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.25","itemNo":"30","name":"HOSE FLANGE NAPLE","code":"080.01.02.18","qty":2,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.01","itemNo":"1","name":"PUMP COVER","code":"100.01.02.01","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.02","itemNo":"2","name":"LARGE O-RING","code":"100.01.02.02","qty":1,"spec":"rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.03","itemNo":"3","name":"SEALING WASHER (M8 Nylon)","code":"999.01.50","qty":4,"spec":"M8 Nylon Ring","subGroup":"BOLT","partCode":"999.01.50","price":0},{"group":"4 inch","itemCode":"100.01.02.04","itemNo":"4","name":"MOUNT BOLT (M8 X 50)","code":"999.01.03","qty":4,"spec":"M8 X 50","subGroup":"BOLT","partCode":"999.01.03","price":0},{"group":"4 inch","itemCode":"100.01.02.05","itemNo":"5","name":"MECHANICAL SEAL","code":"100.01.02.03","qty":1,"spec":"","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.06","itemNo":"6","name":"IMPELLER","code":"100.01.02.04","qty":1,"spec":"besi cor","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.07","itemNo":"7","name":"IMPELLER HOUSE","code":"100.01.02.05","qty":1,"spec":"besi cor","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.08","itemNo":"8","name":"SMALL O-RING","code":"100.01.02.06","qty":1,"spec":"rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.09","itemNo":"9","name":"PUMP BODY","code":"100.01.02.07","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.10","itemNo":"10","name":"OULET SEAL","code":"100.01.02.08","qty":1,"spec":"gasket rubber","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.11","itemNo":"12","name":"OUTLET CONNECTION BOLT (M10 x 25)","code":"999.01.05","qty":4,"spec":"M10 x 25","subGroup":"BOLT","partCode":"999.01.05","price":0},{"group":"4 inch","itemCode":"100.01.02.12","itemNo":"13","name":"3/4\" PLUG O-RING","code":"100.01.02.09","qty":2,"spec":"3/4 inch rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.13","itemNo":"14","name":"3/4\" PLUG","code":"100.01.02.10","qty":2,"spec":"3/4 inch Plastic Plug","subGroup":"ACESORIES","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.14","itemNo":"18","name":"OUTLET FLANGE","code":"100.01.02.11","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.15","itemNo":"19","name":"INLET FLANGE","code":"100.01.02.12","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.16","itemNo":"20","name":"INLET CHECK VALVE","code":"100.01.02.13","qty":1,"spec":"rubber","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.17","itemNo":"21","name":"INLET CONNECTION BOLT (M10 x 25)","code":"999.01.05","qty":4,"spec":"M10 x 25","subGroup":"BOLT","partCode":"999.01.05","price":0},{"group":"4 inch","itemCode":"100.01.02.18","itemNo":"22","name":"PUMP BODY BOLT (M10 x 30)","code":"999.01.06","qty":4,"spec":"M10 x 30","subGroup":"BOLT","partCode":"999.01.06","price":0},{"group":"4 inch","itemCode":"100.01.02.19","itemNo":"24","name":"SUCTION STRAINER CLAMP","code":"100.01.02.14","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.20","itemNo":"25","name":"SUCTION STRAINER","code":"100.01.02.15","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.21","itemNo":"26","name":"SHAFT BOLT (M8 x 25)","code":"999.01.01","qty":1,"spec":"M8 x 25","subGroup":"BOLT","partCode":"999.01.01","price":0},{"group":"4 inch","itemCode":"100.01.02.22","itemNo":"27","name":"SHAFT BOLT WASHER (M8 Nylon)","code":"999.01.50","qty":1,"spec":"M8 Nylon Ring","subGroup":"BOLT","partCode":"999.01.50","price":0},{"group":"4 inch","itemCode":"100.01.02.23","itemNo":"28","name":"KEY / SPI","code":"100.01.02.16","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.24","itemNo":"29","name":"HOSE FLANGE","code":"100.01.02.17","qty":2,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.25","itemNo":"30","name":"HOSE FLANGE NAPLE","code":"100.01.02.18","qty":2,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.01","itemNo":"1","name":"PUMP COVER","code":"160.01.02.01","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.02","itemNo":"2","name":"LARGE O-RING","code":"160.01.02.02","qty":1,"spec":"rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.03","itemNo":"3","name":"SEALING WASHER (M8 Nylon)","code":"999.01.50","qty":4,"spec":"M8 Nylon Ring","subGroup":"BOLT","partCode":"999.01.50","price":0},{"group":"6 inch","itemCode":"160.01.02.04","itemNo":"4","name":"MOUNT BOLT (M8X40)","code":"999.01.02","qty":4,"spec":"M8 X 40","subGroup":"BOLT","partCode":"999.01.02","price":0},{"group":"6 inch","itemCode":"160.01.02.05","itemNo":"5","name":"MECHANICAL SEAL","code":"160.01.02.03","qty":1,"spec":"","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.06","itemNo":"6","name":"IMPELLER","code":"160.01.02.04","qty":1,"spec":"besi cor","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.07","itemNo":"7","name":"IMPELLER HOUSE","code":"160.01.02.05","qty":1,"spec":"besi cor","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.08","itemNo":"8","name":"SMALL O-RING","code":"160.01.02.06","qty":1,"spec":"rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.09","itemNo":"9","name":"PUMP BODY","code":"160.01.02.07","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.10","itemNo":"10","name":"OULET SEAL (Gasket)","code":"160.01.02.08","qty":1,"spec":"gasket rubber","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.11","itemNo":"12","name":"OUTLET CONNECTION BOLT (M10X30)","code":"999.01.06","qty":5,"spec":"M10 x 30","subGroup":"BOLT","partCode":"999.01.06","price":0},{"group":"6 inch","itemCode":"160.01.02.12","itemNo":"13","name":"1\" PLUG O-RING","code":"160.01.02.09","qty":2,"spec":"1 inch rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.13","itemNo":"14","name":"1\" PLUG","code":"160.01.02.10","qty":2,"spec":"1 INCH","subGroup":"ACESORIES","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.14","itemNo":"18","name":"OUTLET FLANGE","code":"160.01.02.11","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.15","itemNo":"19","name":"INLET FLANGE","code":"160.01.02.12","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.16","itemNo":"20","name":"INLET CHECK VALVE","code":"160.01.02.13","qty":1,"spec":"rubber","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.17","itemNo":"21","name":"INLET CONNECTION BOLT (M10X30 SH)","code":"999.01.07","qty":5,"spec":"M10 x 30 Socket Head","subGroup":"BOLT","partCode":"999.01.07","price":0},{"group":"6 inch","itemCode":"160.01.02.18","itemNo":"22","name":"PUMP BODY BOLT (M10X35)","code":"999.01.08","qty":4,"spec":"M10 x 35","subGroup":"BOLT","partCode":"999.01.08","price":0},{"group":"6 inch","itemCode":"160.01.02.19","itemNo":"24","name":"SUCTION STRAINER CLAMP","code":"160.01.02.14","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.20","itemNo":"25","name":"SUCTION STRAINER","code":"160.01.02.15","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.21","itemNo":"26","name":"SHAFT BOLT (M10X30)","code":"999.01.06","qty":1,"spec":"M10 x 30","subGroup":"BOLT","partCode":"999.01.06","price":0},{"group":"6 inch","itemCode":"160.01.02.22","itemNo":"27","name":"SHAFT BOLT WASHER (M10 Copper)","code":"999.01.60","qty":1,"spec":"M10 copper ring","subGroup":"BOLT","partCode":"999.01.60","price":0},{"group":"6 inch","itemCode":"160.01.02.23","itemNo":"28","name":"KEY / SPI","code":"160.01.02.16","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.24","itemNo":"29","name":"HOSE FLANGE","code":"160.01.02.17","qty":2,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.25","itemNo":"30","name":"HOSE FLANGE BOLT AND NUT (M10X40)","code":"999.01.09","qty":10,"spec":"M10 X 40","subGroup":"BOLT","partCode":"999.01.09","price":0},{"group":"6 inch","itemCode":"160.01.02.26","itemNo":"31","name":"3/4\" PLUG","code":"160.01.02.18","qty":1,"spec":"3/4 inch Plastic Plug","subGroup":"ACESORIES","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.27","itemNo":"32","name":"3/4\" PLUG O-RING","code":"160.01.02.19","qty":1,"spec":"3/4 inch rubber seal","subGroup":"ACESORIES","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.00","itemNo":"","name":"PUMP UNIT 3 INCH","code":"080.01.02.00","qty":1,"spec":"","subGroup":"WATER PUMP","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.00","itemNo":"","name":"PUMP UNIT 4 INCH","code":"100.01.02.00","qty":1,"spec":"","subGroup":"WATER PUMP","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.00","itemNo":"","name":"PUMP UNIT 6 INCH","code":"160.01.02.00","qty":1,"spec":"","subGroup":"WATER PUMP","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.01.01","itemNo":"","name":"ENGINE DIESEL 3 INCH","code":"080.01.01.01","qty":1,"spec":"7.5 HP","subGroup":"ENGINE","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.01.01","itemNo":"","name":"ENGINE DIESEL 4 INCH","code":"100.01.01.01","qty":1,"spec":"9 HP","subGroup":"ENGINE","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.01.01","itemNo":"","name":"ENGINE DIESEL 6 INCH","code":"160.01.01.01","qty":1,"spec":"12 HP","subGroup":"ENGINE","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.01.02","itemNo":"","name":"ENGINE GASOLINE 3 INCH","code":"080.02.01.01","qty":1,"spec":"6.5 HP","subGroup":"ENGINE","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.01.02","itemNo":"","name":"ENGINE GASOLINE 4 INCH","code":"100.02.01.01","qty":1,"spec":"6.5 HP","subGroup":"ENGINE","partCode":"","price":0}];
 
@@ -440,7 +524,7 @@ function getRows(){ return [...document.querySelectorAll('#costBody tr')].map(tr
   qty:num(tr.querySelector('.cQty').value), price:num(tr.querySelector('.cPrice').value),
   total:num(tr.querySelector('.cQty').value)*num(tr.querySelector('.cPrice').value)
 })); }
-function getForm(){ const ids=['projectName','providerName','officeAddress','year','agency','method','location','brand','pumpType','displayPrice','qtyUnit','capacity','bundle','masterSource','specNote','overheadPct','riskPct','marketingPct','marketingNominal','profitPct','profitCap','ppnPct','pphPct','platformPct','rounding','roundingMode','taxNote','professionalName','professionalPct','professionalNominal','professionalNote']; const o={}; ids.forEach(id=>o[id]=$(id).value); o.rows=getRows(); o.partRows=getPartRows ? getPartRows() : []; return o; }
+function getForm(){ const ids=['projectName','providerName','officeAddress','year','agency','method','location','brand','pumpType','displayPrice','qtyUnit','capacity','bundle','masterSource','specNote','overheadPct','riskPct','marketingPct','marketingNominal','profitPct','profitCap','ppnPct','pphPct','platformPct','rounding','roundingMode','taxNote','professionalName','professionalPct','professionalNominal','professionalNote','realTaxPct','brokerPct','brokerNominal','realNote','budgetTaxPct','budgetBrokerPct','budgetBrokerNominal','budgetNote']; const o={}; ids.forEach(id=>{ if($(id)) o[id]=$(id).value; }); o.rows=getRows(); o.partRows=getPartRows ? getPartRows() : []; o.budgetQty={}; document.querySelectorAll('.budgetQty').forEach(el=>{o.budgetQty[el.dataset.key]=el.value;}); return o; }
 function currentPumpProfile(){
   const type = $('pumpType').value || '';
   const group = type.includes('160') || type.includes('6 inch') ? '6 inch' : (type.includes('100') || type.includes('4 inch') ? '4 inch' : '3 inch');
@@ -547,7 +631,7 @@ function printPartListDoc(){
   <div class="footer">Output aplikasi profesional analisa HPP dan part list pengadaan pompa.</div>`;
   openPrintDoc('Part List Unit Pompa + Engine', body);
 }
-function setForm(o){ if(!o) return; Object.keys(o).forEach(id=>{if($(id) && id!=='rows' && id!=='partRows') $(id).value=o[id];}); if(o.rows){$('costBody').innerHTML=''; o.rows.forEach(r=>makeRow([r.name,r.cat,r.qty,r.price]));} if(o.partRows && $('partBody')){ $('partBody').innerHTML=''; o.partRows.forEach(r=>makePartRow(r)); calcPartList(); } calc(); }
+function setForm(o){ if(!o) return; Object.keys(o).forEach(id=>{if($(id) && id!=='rows' && id!=='partRows' && id!=='budgetQty') $(id).value=o[id];}); if(o.rows){$('costBody').innerHTML=''; o.rows.forEach(r=>makeRow([r.name,r.cat,r.qty,r.price]));} if(o.partRows && $('partBody')){ $('partBody').innerHTML=''; o.partRows.forEach(r=>makePartRow(r)); calcPartList(); } if(o.budgetQty){ Object.entries(o.budgetQty).forEach(([key,val])=>{ const el=$('budgetQty_'+productSlug(key)); if(el) el.value=val; }); calcBudget(); } calc(); }
 function distributeHargaTayang(rows, amount, qty){
   if(Math.abs(amount) <= 0.5) return rows;
   const plan = [
@@ -568,6 +652,246 @@ function distributeHargaTayang(rows, amount, qty){
   });
   return rows;
 }
+
+function getMasterUnitHpp(){
+  const master = getMasterForSelected ? getMasterForSelected() : null;
+  if(master && Array.isArray(master.items)){
+    return master.items.reduce((sum,item)=>sum + num(item[2]), 0);
+  }
+  const qty=Math.max(1,num($('qtyUnit')?.value));
+  return getRows().reduce((sum,r)=>sum+r.total,0) / qty;
+}
+function getMasterRowsForReal(){
+  const master = getMasterForSelected ? getMasterForSelected() : null;
+  if(master && Array.isArray(master.items)){
+    return master.items.map(item=>({name:item[0],cat:item[1],price:num(item[2])}));
+  }
+  const qty=Math.max(1,num($('qtyUnit')?.value));
+  return getRows().map(r=>({name:r.name,cat:r.cat,price:r.total/qty}));
+}
+function calcRealHppResult(){
+  const qty=Math.max(1,num($('qtyUnit')?.value));
+  const unitPrice=num($('displayPrice')?.value) || 0;
+  const totalTayang=unitPrice*qty;
+  const taxPct=num($('realTaxPct')?.value || 13.5);
+  const brokerPct=num($('brokerPct')?.value || 30);
+  const brokerNominal=num($('brokerNominal')?.value || 0);
+  const taxTotal=totalTayang*taxPct/100;
+  const afterTax=Math.max(0,totalTayang-taxTotal);
+  let brokerFee=afterTax*brokerPct/100 + brokerNominal;
+  brokerFee=Math.min(Math.max(0,brokerFee),afterTax);
+  const companyShare=afterTax-brokerFee;
+  const masterUnitHpp=getMasterUnitHpp();
+  const masterTotalHpp=masterUnitHpp*qty;
+  const realProfit=companyShare-masterTotalHpp;
+  const profitPerUnit=qty?realProfit/qty:0;
+  const realMargin=companyShare ? realProfit/companyShare*100 : 0;
+  const masterRows=getMasterRowsForReal();
+  return {qty,unitPrice,totalTayang,taxPct,taxTotal,afterTax,brokerPct,brokerNominal,brokerFee,companyShare,masterUnitHpp,masterTotalHpp,realProfit,profitPerUnit,realMargin,masterRows};
+}
+function renderRealHpp(r){
+  if(!$('realHppArea')) return;
+  const f=getForm();
+  if($('realSource')) $('realSource').value = (getMasterForSelected()?.source || f.masterSource || 'Master data produk');
+  const statusClass = r.realProfit >= 0 ? 'green' : 'red';
+  const detailRows = r.masterRows.map((row,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(row.name)}</td><td>${escapeHtml(row.cat)}</td><td style="text-align:right">${fmt.format(row.price)}</td><td style="text-align:right">${fmt.format(row.price*r.qty)}</td></tr>`).join('');
+  $('realHppArea').innerHTML = `
+    <div class="formula">
+      <b>Produk:</b> ${escapeHtml(f.brand)} ${escapeHtml(f.pumpType)} · <b>Qty:</b> ${r.qty} unit · <b>Harga tayang/unit:</b> ${fmt.format(r.unitPrice)}<br/>
+      <b>Status:</b> <span class="tag ${statusClass}">${r.realProfit>=0?'Laba riil positif':'Perlu evaluasi harga/HPP'}</span>
+    </div>
+    <h3>Ringkasan Perhitungan Riil</h3>
+    <div class="tableWrap"><table class="costTable"><thead><tr><th>Uraian</th><th>Per Unit</th><th>Total</th><th>Catatan</th></tr></thead><tbody>
+      <tr><td>Harga tayang final</td><td style="text-align:right">${fmt.format(r.unitPrice)}</td><td style="text-align:right"><b>${fmt.format(r.totalTayang)}</b></td><td>Harga tayang per tipe produk</td></tr>
+      <tr><td>Pajak + PPh gabungan ${pctText(r.taxPct)}</td><td style="text-align:right">${fmt.format(r.taxTotal/r.qty)}</td><td style="text-align:right">${fmt.format(r.taxTotal)}</td><td>Input internal gabungan pajak dan PPh</td></tr>
+      <tr><td>Nilai setelah pajak</td><td style="text-align:right">${fmt.format(r.afterTax/r.qty)}</td><td style="text-align:right"><b>${fmt.format(r.afterTax)}</b></td><td>Harga tayang dikurangi pajak & PPh</td></tr>
+      <tr><td>Fee broker/agen resmi ${pctText(r.brokerPct)}</td><td style="text-align:right">${fmt.format(r.brokerFee/r.qty)}</td><td style="text-align:right">${fmt.format(r.brokerFee)}</td><td>Opsional, hanya bila legal dan terdokumentasi</td></tr>
+      <tr class="total"><td>Sisa masuk perusahaan</td><td style="text-align:right">${fmt.format(r.companyShare/r.qty)}</td><td style="text-align:right">${fmt.format(r.companyShare)}</td><td>Nilai setelah pajak dan broker</td></tr>
+      <tr><td>HPP riil master data</td><td style="text-align:right">${fmt.format(r.masterUnitHpp)}</td><td style="text-align:right">${fmt.format(r.masterTotalHpp)}</td><td>Sumber dari master data produk</td></tr>
+      <tr class="total"><td>Laba/rugi riil setelah HPP master</td><td style="text-align:right">${fmt.format(r.profitPerUnit)}</td><td style="text-align:right">${fmt.format(r.realProfit)}</td><td>Margin ${pctText(r.realMargin)}</td></tr>
+    </tbody></table></div>
+    <h3>Detail HPP Riil dari Master Data</h3>
+    <div class="tableWrap"><table class="costTable"><thead><tr><th>No</th><th>Komponen Master</th><th>Kategori</th><th>HPP / Unit</th><th>Total Qty</th></tr></thead><tbody>${detailRows}<tr class="total"><td></td><td colspan="2">TOTAL HPP RIIL MASTER DATA</td><td style="text-align:right">${fmt.format(r.masterUnitHpp)}</td><td style="text-align:right">${fmt.format(r.masterTotalHpp)}</td></tr></tbody></table></div>
+    <p class="disclaimer"><b>Catatan:</b> ${escapeHtml(f.realNote || 'Perhitungan ini hanya untuk analisa internal dan wajib didukung dokumen yang sah.')}</p>`;
+}
+function exportRealHppCsv(){
+  const r=calcRealHppResult(), f=getForm();
+  const lines=[['Perhitungan HPP Riil dan Sisa Keuntungan'],['Penyedia',f.providerName],['Produk',`${f.brand} ${f.pumpType}`],['Qty',r.qty],['Harga tayang per unit',r.unitPrice],[],['Uraian','Per Unit','Total','Catatan']];
+  [['Harga tayang final',r.unitPrice,r.totalTayang,'Harga tayang per tipe'],['Pajak + PPh gabungan '+pctText(r.taxPct),r.taxTotal/r.qty,r.taxTotal,'Input internal'],['Nilai setelah pajak',r.afterTax/r.qty,r.afterTax,'Harga tayang dikurangi pajak & PPh'],['Fee broker/agen resmi '+pctText(r.brokerPct),r.brokerFee/r.qty,r.brokerFee,'Legal dan terdokumentasi'],['Sisa masuk perusahaan',r.companyShare/r.qty,r.companyShare,'Nilai setelah pajak dan broker'],['HPP riil master data',r.masterUnitHpp,r.masterTotalHpp,'Master data produk'],['Laba/rugi riil',r.profitPerUnit,r.realProfit,'Setelah HPP master']].forEach(x=>lines.push(x));
+  lines.push([]); lines.push(['Detail HPP Master','Kategori','HPP Unit','Total Qty']);
+  r.masterRows.forEach(row=>lines.push([row.name,row.cat,row.price,row.price*r.qty]));
+  const csv=lines.map(row=>row.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}); const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='hpp-riil-sisa-keuntungan.csv'; a.click(); URL.revokeObjectURL(a.href);
+  toast('CSV HPP riil dibuat');
+}
+
+
+function initBudgetTable(){
+  if(!$('budgetBody')) return;
+  $('budgetBody').innerHTML='';
+  BUDGET_PRODUCTS.forEach(key=>{
+    const tr=document.createElement('tr');
+    const slug=productSlug(key);
+    const hppUnit=masterUnitHppByKey(key);
+    const price=DISPLAY_PRICE[key] || 0;
+    tr.dataset.key=key;
+    tr.innerHTML=`
+      <td><b>${escapeHtml(productLabelByKey(key))}</b><br><small>${escapeHtml(key)}</small></td>
+      <td class="moneyCell bHppUnit">${fmt.format(hppUnit)}</td>
+      <td class="moneyCell bPriceUnit">${fmt.format(price)}</td>
+      <td><input class="budgetQty" id="budgetQty_${slug}" data-key="${escapeHtml(key)}" type="number" min="0" step="1" value="0" /></td>
+      <td class="moneyCell bHppTotal">Rp0</td>
+      <td class="moneyCell bTayangTotal">Rp0</td>
+      <td class="moneyCell bTaxTotal">Rp0</td>
+      <td class="moneyCell bBrokerTotal">Rp0</td>
+      <td class="moneyCell bCompanyTotal">Rp0</td>
+      <td class="moneyCell bProfitTotal">Rp0</td>`;
+    tr.querySelector('.budgetQty').addEventListener('input',()=>{calcBudget(); saveBudgetSilent();});
+    $('budgetBody').appendChild(tr);
+  });
+  calcBudget();
+}
+function saveBudgetSilent(){ try{ localStorage.setItem(stateKey, JSON.stringify(getForm())); }catch(e){} }
+function calcBudget(){
+  if(!$('budgetBody')) return null;
+  const taxPct=num($('budgetTaxPct')?.value || 13.5);
+  const brokerPct=num($('budgetBrokerPct')?.value || 30);
+  const brokerNominal=num($('budgetBrokerNominal')?.value || 0);
+  const rows=[];
+  let totalQty=0,totalHpp=0,totalTayang=0,totalTax=0,totalAfterTax=0,totalBrokerPctBase=0;
+  BUDGET_PRODUCTS.forEach(key=>{
+    const qty=Math.max(0,num($('budgetQty_'+productSlug(key))?.value || 0));
+    const hppUnit=masterUnitHppByKey(key);
+    const priceUnit=DISPLAY_PRICE[key] || 0;
+    const hppTotal=hppUnit*qty;
+    const tayangTotal=priceUnit*qty;
+    const taxTotal=tayangTotal*taxPct/100;
+    const afterTax=Math.max(0,tayangTotal-taxTotal);
+    const brokerPctValue=afterTax*brokerPct/100;
+    totalQty+=qty; totalHpp+=hppTotal; totalTayang+=tayangTotal; totalTax+=taxTotal; totalAfterTax+=afterTax; totalBrokerPctBase+=brokerPctValue;
+    rows.push({key,label:productLabelByKey(key),qty,hppUnit,priceUnit,hppTotal,tayangTotal,taxTotal,afterTax,brokerPctValue});
+  });
+  const brokerTotal=Math.min(Math.max(0,totalBrokerPctBase+brokerNominal), totalAfterTax);
+  rows.forEach(row=>{
+    const share = totalAfterTax ? (row.afterTax/totalAfterTax) : 0;
+    row.brokerTotal = brokerTotal*share;
+    row.companyTotal = row.afterTax-row.brokerTotal;
+    row.profitTotal = row.companyTotal-row.hppTotal;
+  });
+  let totalCompany=0,totalProfit=0;
+  rows.forEach(row=>{ totalCompany+=row.companyTotal; totalProfit+=row.profitTotal; });
+  rows.forEach(row=>{
+    const tr=$('budgetQty_'+productSlug(row.key))?.closest('tr');
+    if(!tr) return;
+    tr.querySelector('.bHppTotal').textContent=fmt.format(row.hppTotal);
+    tr.querySelector('.bTayangTotal').textContent=fmt.format(row.tayangTotal);
+    tr.querySelector('.bTaxTotal').textContent=fmt.format(row.taxTotal);
+    tr.querySelector('.bBrokerTotal').textContent=fmt.format(row.brokerTotal);
+    tr.querySelector('.bCompanyTotal').textContent=fmt.format(row.companyTotal);
+    const profitCell=tr.querySelector('.bProfitTotal');
+    profitCell.textContent=fmt.format(row.profitTotal);
+    profitCell.style.color=row.profitTotal>=0?'#0f514d':'#b91c1c';
+  });
+  const margin=totalCompany ? totalProfit/totalCompany*100 : 0;
+  if($('budgetSummary')) $('budgetSummary').innerHTML=`
+    <b>Ringkasan Anggaran Gabungan</b><br/>
+    Total unit: <b>${totalQty}</b> · Kebutuhan dana HPP master: <b>${fmt.format(totalHpp)}</b> · Total harga tayang: <b>${fmt.format(totalTayang)}</b><br/>
+    Pajak + PPh ${pctText(taxPct)}: <b>${fmt.format(totalTax)}</b> · Fee broker/agen ${pctText(brokerPct)}: <b>${fmt.format(brokerTotal)}</b> · Sisa masuk PT: <b>${fmt.format(totalCompany)}</b><br/>
+    Laba/rugi riil setelah HPP master: <b style="color:${totalProfit>=0?'#166534':'#b91c1c'}">${fmt.format(totalProfit)}</b> · Margin terhadap sisa masuk PT: <b>${pctText(margin)}</b>`;
+  return {rows,totalQty,totalHpp,totalTayang,taxPct,totalTax,totalAfterTax,brokerPct,brokerNominal,brokerTotal,totalCompany,totalProfit,margin};
+}
+function setBudgetExample(){
+  BUDGET_PRODUCTS.forEach(key=>{ const el=$('budgetQty_'+productSlug(key)); if(el) el.value=0; });
+  const diesel3=$('budgetQty_'+productSlug('KSA-80D | Pompa Diesel 3 inch'));
+  const diesel6=$('budgetQty_'+productSlug('KSA-160D | Pompa Diesel 6 inch'));
+  if(diesel3) diesel3.value=150;
+  if(diesel6) diesel6.value=50;
+  calcBudget(); toast('Contoh anggaran 150 unit 3 inch dan 50 unit 6 inch dimuat');
+}
+function clearBudgetQty(){ BUDGET_PRODUCTS.forEach(key=>{ const el=$('budgetQty_'+productSlug(key)); if(el) el.value=0; }); calcBudget(); toast('Qty anggaran dikosongkan'); }
+function exportBudgetCsv(){
+  const b=calcBudget(), f=getForm(); if(!b) return;
+  const lines=[['Anggaran Semua Produk'],['Penyedia',f.providerName],['Paket',f.projectName],['Pajak + PPh (%)',b.taxPct],['Fee broker/agen (%)',b.brokerPct],[],['Produk','Qty','HPP Master/Unit','Harga Tayang/Unit','Dana HPP','Total Tayang','Pajak+PPh','Fee Broker','Sisa Masuk PT','Laba/Rugi Riil']];
+  b.rows.forEach(r=>lines.push([r.label,r.qty,r.hppUnit,r.priceUnit,r.hppTotal,r.tayangTotal,r.taxTotal,r.brokerTotal,r.companyTotal,r.profitTotal]));
+  lines.push([]); [['Total Qty',b.totalQty],['Total Dana HPP',b.totalHpp],['Total Harga Tayang',b.totalTayang],['Total Pajak + PPh',b.totalTax],['Total Fee Broker',b.brokerTotal],['Total Sisa Masuk PT',b.totalCompany],['Total Laba/Rugi Riil',b.totalProfit],['Margin',b.margin]].forEach(r=>lines.push(r));
+  const csv=lines.map(row=>row.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'}); const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='anggaran-semua-produk-pompa.csv'; a.click(); URL.revokeObjectURL(a.href);
+  toast('CSV anggaran dibuat');
+}
+function printBudgetDoc(){
+  const b=calcBudget(), f=getForm(); if(!b) return;
+  const rowsHtml=b.rows.filter(r=>r.qty>0).map((r,i)=>`<tr><td class="center">${i+1}</td><td>${escapeHtml(r.label)}</td><td class="right">${r.qty}</td><td class="right">${fmt.format(r.hppUnit)}</td><td class="right">${fmt.format(r.priceUnit)}</td><td class="right">${fmt.format(r.hppTotal)}</td><td class="right">${fmt.format(r.tayangTotal)}</td><td class="right">${fmt.format(r.taxTotal)}</td><td class="right">${fmt.format(r.brokerTotal)}</td><td class="right">${fmt.format(r.companyTotal)}</td><td class="right">${fmt.format(r.profitTotal)}</td></tr>`).join('') || `<tr><td colspan="11" class="center">Belum ada quantity produk yang diinput.</td></tr>`;
+  const body=outputHeader('ANGGARAN GABUNGAN SEMUA PRODUK','Kebutuhan dana HPP master dan proyeksi sisa hasil usaha')+`
+  <h2>A. Identitas Anggaran</h2>
+  ${kvTable([
+    ['Nama Paket',f.projectName,'Penyedia',f.providerName],
+    ['Tahun Anggaran',f.year,'Satker/Dinas',f.agency],
+    ['Pajak + PPh Gabungan',pctText(b.taxPct),'Fee Broker/Agen Resmi',pctText(b.brokerPct)],
+    ['Total Unit',String(b.totalQty),'Sumber Harga','Harga tayang + HPP master data']
+  ])}
+  <h2>B. Rincian Anggaran per Produk</h2>
+  <table><thead><tr><th>No</th><th>Produk</th><th>Qty</th><th>HPP/Unit</th><th>Harga Tayang/Unit</th><th>Dana HPP</th><th>Total Tayang</th><th>Pajak+PPh</th><th>Fee Broker</th><th>Sisa Masuk PT</th><th>Laba/Rugi</th></tr></thead><tbody>${rowsHtml}<tr class="total"><td></td><td>TOTAL</td><td class="right">${b.totalQty}</td><td></td><td></td><td class="right">${fmt.format(b.totalHpp)}</td><td class="right">${fmt.format(b.totalTayang)}</td><td class="right">${fmt.format(b.totalTax)}</td><td class="right">${fmt.format(b.brokerTotal)}</td><td class="right">${fmt.format(b.totalCompany)}</td><td class="right">${fmt.format(b.totalProfit)}</td></tr></tbody></table>
+  <h2>C. Ringkasan</h2>
+  <table><tbody>
+    <tr><td><b>Kebutuhan dana HPP master</b></td><td class="right">${fmt.format(b.totalHpp)}</td></tr>
+    <tr><td><b>Total harga tayang</b></td><td class="right">${fmt.format(b.totalTayang)}</td></tr>
+    <tr><td><b>Sisa masuk PT setelah pajak dan broker</b></td><td class="right">${fmt.format(b.totalCompany)}</td></tr>
+    <tr><td><b>Laba/rugi riil setelah HPP master</b></td><td class="right">${fmt.format(b.totalProfit)}</td></tr>
+    <tr><td><b>Margin terhadap sisa masuk PT</b></td><td class="right">${pctText(b.margin)}</td></tr>
+  </tbody></table>
+  <div class="box small">${escapeHtml(f.budgetNote || 'Analisa ini untuk kebutuhan internal perusahaan dan harus didukung dokumen harga, pajak, kerja sama agen, dan bukti biaya yang sah.')}</div>
+  <table class="sign"><tr><th>Disusun oleh</th><th>Diperiksa oleh</th><th>Disetujui oleh</th></tr><tr><td><br><br><br>(_________________)</td><td><br><br><br>(_________________)</td><td><br><br><br>(_________________)</td></tr></table>
+  <div class="footer">Output aplikasi profesional analisa HPP dan anggaran gabungan produk pompa.</div>`;
+  openPrintDoc('Anggaran Semua Produk Pompa', body);
+}
+
+function downloadBudgetDirectPdf(){
+  const b=calcBudget(), f=getForm(); if(!b) return;
+  const activeRows=b.rows.filter(r=>r.qty>0);
+  const pdf=createPdfBuilder('ANGGARAN GABUNGAN SEMUA PRODUK POMPA');
+  pdf.kv('Penyedia', f.providerName || '');
+  pdf.kv('Alamat kantor', f.officeAddress || '');
+  pdf.kv('Paket/Kegiatan', f.projectName || '');
+  pdf.kv('Satker/Dinas', f.agency || '');
+  pdf.kv('Tahun Anggaran', f.year || '');
+  pdf.kv('Pajak + PPh gabungan', pctText(b.taxPct));
+  pdf.kv('Fee broker/agen resmi', pctText(b.brokerPct));
+  pdf.kv('Total unit', b.totalQty + ' unit');
+  pdf.gap();
+  pdf.heading('A. Ringkasan Anggaran');
+  pdf.kv('Kebutuhan dana HPP master', fmt.format(b.totalHpp));
+  pdf.kv('Total harga tayang', fmt.format(b.totalTayang));
+  pdf.kv('Total pajak + PPh', fmt.format(b.totalTax));
+  pdf.kv('Total fee broker/agen resmi', fmt.format(b.brokerTotal));
+  pdf.kv('Sisa masuk PT', fmt.format(b.totalCompany));
+  pdf.kv('Laba/rugi riil setelah HPP master', fmt.format(b.totalProfit));
+  pdf.kv('Margin terhadap sisa masuk PT', pctText(b.margin));
+  pdf.gap();
+  pdf.heading('B. Rincian Anggaran per Produk');
+  if(!activeRows.length){
+    pdf.add('Belum ada quantity produk yang diinput. Isi jumlah unit pada menu Anggaran Semua Produk, lalu buat PDF kembali.');
+  } else {
+    activeRows.forEach((r,i)=>{
+      pdf.add((i+1)+'. '+r.label,{bold:true});
+      pdf.add('Qty: '+r.qty+' unit | HPP/unit: '+fmt.format(r.hppUnit)+' | Harga tayang/unit: '+fmt.format(r.priceUnit));
+      pdf.add('Dana HPP: '+fmt.format(r.hppTotal)+' | Total tayang: '+fmt.format(r.tayangTotal)+' | Pajak+PPh: '+fmt.format(r.taxTotal));
+      pdf.add('Fee broker/agen: '+fmt.format(r.brokerTotal)+' | Sisa masuk PT: '+fmt.format(r.companyTotal)+' | Laba/rugi: '+fmt.format(r.profitTotal));
+      pdf.gap(3);
+    });
+  }
+  pdf.gap();
+  pdf.heading('C. Formula Internal');
+  pdf.add('Harga tayang total dikurangi pajak + PPh gabungan, kemudian dikurangi fee broker/agen resmi terdokumentasi, lalu dibandingkan dengan HPP master data untuk mengetahui kebutuhan dana dan laba/rugi riil.');
+  pdf.heading('D. Catatan');
+  pdf.add(f.budgetNote || 'Analisa ini untuk kebutuhan internal perusahaan dan harus didukung dokumen harga, pajak, kerja sama agen, dan bukti biaya yang sah.');
+  pdf.gap();
+  pdf.add('Disusun oleh: ____________________     Diperiksa oleh: ____________________     Disetujui oleh: ____________________');
+  downloadBlob(buildPdfBlob(pdf.pages), pdfFileName('anggaran semua produk pompa '+(f.providerName||'penyedia')));
+  toast('PDF anggaran semua produk dibuat');
+}
+
 function calc(){
   const baseRows=getRows();
   let baseSubtotal=0;
@@ -624,15 +948,16 @@ function calc(){
   professionalFee = professionalBase*num($('professionalPct')?.value)/100 + num($('professionalNominal')?.value);
   professionalFee = Math.min(Math.max(0, professionalFee), professionalBase);
   netAfterProfessional = professionalBase - professionalFee;
+  const real = calcRealHppResult();
 
-  $('sSubtotal').textContent=fmt.format(subtotal); $('sOverhead').textContent=fmt.format(overhead); $('sRisk').textContent=fmt.format(risk); $('sMarketing').textContent=fmt.format(marketing); $('sHpp').textContent=fmt.format(hpp); $('sProfit').textContent=fmt.format(profit)+` (${usedPct.toFixed(1)}%)`; $('sPlatform').textContent=fmt.format(platform); $('sDpp').textContent=fmt.format(dpp); $('sPpn').textContent=fmt.format(ppn); $('sGrand').textContent=fmt.format(grand); $('sPerUnit').textContent=fmt.format(perUnit); $('sPph').textContent=fmt.format(pph); $('sCash').textContent=fmt.format(cash); $('sProfessionalBase').textContent=fmt.format(professionalBase); $('sProfessionalFee').textContent=fmt.format(professionalFee); $('sNetAfterProfessional').textContent=fmt.format(netAfterProfessional);
+  $('sSubtotal').textContent=fmt.format(subtotal); $('sOverhead').textContent=fmt.format(overhead); $('sRisk').textContent=fmt.format(risk); $('sMarketing').textContent=fmt.format(marketing); $('sHpp').textContent=fmt.format(hpp); $('sProfit').textContent=fmt.format(profit)+` (${usedPct.toFixed(1)}%)`; $('sPlatform').textContent=fmt.format(platform); $('sDpp').textContent=fmt.format(dpp); $('sPpn').textContent=fmt.format(ppn); $('sGrand').textContent=fmt.format(grand); $('sPerUnit').textContent=fmt.format(perUnit); $('sPph').textContent=fmt.format(pph); $('sCash').textContent=fmt.format(cash); $('sProfessionalBase').textContent=fmt.format(professionalBase); $('sProfessionalFee').textContent=fmt.format(professionalFee); $('sNetAfterProfessional').textContent=fmt.format(netAfterProfessional); if($('sBrokerFee')) $('sBrokerFee').textContent=fmt.format(real.brokerFee); if($('sCompanyShare')) $('sCompanyShare').textContent=fmt.format(real.companyShare); if($('sRealProfit')) $('sRealProfit').textContent=fmt.format(real.realProfit); renderRealHpp(real); if($('budgetBody')) calcBudget();
   $('topPerUnit').textContent=fmt.format(perUnit); $('topGrand').textContent=fmt.format(grand);
   const requested=Math.max(0,num($('profitPct').value));
   const status = priceMode ? `Harga tayang final: profit ${usedPct.toFixed(1)}%` : (requested>15 || requested>num($('profitCap').value) ? `Profit dipangkas ke ${usedPct.toFixed(1)}%` : `Aman: ${usedPct.toFixed(1)}%`);
   $('topStatus').textContent=status; $('profitWarn').textContent=status;
   $('profitWarn').className='tag '+((usedPct>15.05 || usedPct<0)?'red':'green');
-  renderReport({rows,baseRows,baseSubtotal,subtotal,overhead,risk,marketing,hpp,usedPct,profit,platform,dpp,ppn,grand,perUnit,pph,cash,professionalBase,professionalFee,netAfterProfessional,roundingDelta,priceMode,displayPerUnit,adjustment,targetHpp});
-  return {rows,baseRows,baseSubtotal,subtotal,overhead,risk,marketing,hpp,usedPct,profit,platform,dpp,ppn,grand,perUnit,pph,cash,professionalBase,professionalFee,netAfterProfessional,roundingDelta,priceMode,displayPerUnit,adjustment,targetHpp};
+  renderReport({rows,baseRows,baseSubtotal,subtotal,overhead,risk,marketing,hpp,usedPct,profit,platform,dpp,ppn,grand,perUnit,pph,cash,professionalBase,professionalFee,netAfterProfessional,roundingDelta,priceMode,displayPerUnit,adjustment,targetHpp,real});
+  return {rows,baseRows,baseSubtotal,subtotal,overhead,risk,marketing,hpp,usedPct,profit,platform,dpp,ppn,grand,perUnit,pph,cash,professionalBase,professionalFee,netAfterProfessional,roundingDelta,priceMode,displayPerUnit,adjustment,targetHpp,real};
 }
 function renderReport(x){
   const f=getForm();
@@ -653,7 +978,7 @@ function renderReport(x){
       DPP sebelum PPN: <b>${fmt.format(x.dpp)}</b> · PPN: <b>${fmt.format(x.ppn)}</b><br/>
       <span style="font-size:20px"><b>Total penawaran: ${fmt.format(x.grand)}</b></span><br/>
       Harga per unit: <b>${fmt.format(x.perUnit)}</b><br/>
-      PPh dipotong bendahara/cashflow: <b>${fmt.format(x.pph)}</b> · Cash masuk setelah PPh: <b>${fmt.format(x.cash)}</b>${x.professionalFee>0?`<br/>Dasar setelah pajak: <b>${fmt.format(x.professionalBase)}</b> · Jasa profesional: <b>${fmt.format(x.professionalFee)}</b> · Bersih setelah jasa: <b>${fmt.format(x.netAfterProfessional)}</b>`:''}
+      PPh dipotong bendahara/cashflow: <b>${fmt.format(x.pph)}</b> · Cash masuk setelah PPh: <b>${fmt.format(x.cash)}</b>${x.professionalFee>0?`<br/>Dasar setelah pajak: <b>${fmt.format(x.professionalBase)}</b> · Jasa profesional: <b>${fmt.format(x.professionalFee)}</b> · Bersih setelah jasa: <b>${fmt.format(x.netAfterProfessional)}</b>`:''}<br/>HPP riil master: <b>${fmt.format(x.real.masterTotalHpp)}</b> · Sisa setelah pajak & broker: <b>${fmt.format(x.real.companyShare)}</b> · Laba/rugi riil: <b>${fmt.format(x.real.realProfit)}</b>
     </div>
     <p class="disclaimer"><b>Catatan:</b> ${escapeHtml(f.taxNote)} Biaya pemasaran/agen hanya untuk biaya legal dan terdokumentasi, bukan biaya tidak resmi.</p>`;
 }
@@ -879,6 +1204,9 @@ function internalReportPdf(){
     <tr><td>Dasar setelah pajak</td><td class="right">${fmt.format(x.professionalBase)}</td><td>Total harga dikurangi PPN dan PPh</td></tr>
     <tr><td>${escapeHtml(f.professionalName||'Jasa profesional opsional')}</td><td class="right">${fmt.format(x.professionalFee)}</td><td>Biaya opsional setelah pajak; dipakai hanya bila diinput</td></tr>
     <tr><td>Bersih setelah jasa profesional</td><td class="right">${fmt.format(x.netAfterProfessional)}</td><td>Estimasi nilai bersih setelah jasa profesional</td></tr>
+    <tr><td>Fee broker/agen resmi</td><td class="right">${fmt.format(x.real.brokerFee)}</td><td>${pctText(x.real.brokerPct)} dari nilai setelah pajak; hanya bila legal/terdokumentasi</td></tr>
+    <tr><td>Sisa masuk perusahaan</td><td class="right">${fmt.format(x.real.companyShare)}</td><td>Nilai setelah pajak dan broker</td></tr>
+    <tr><td>Laba/rugi riil setelah HPP master</td><td class="right">${fmt.format(x.real.realProfit)}</td><td>HPP master: ${fmt.format(x.real.masterTotalHpp)}</td></tr>
     <tr><td>Rasio profit terhadap total invoice</td><td class="right">${pctText(x.profit/x.grand*100)}</td><td>Margin tampak lebih kecil karena total sudah termasuk PPN</td></tr>
   </tbody></table>
   <h2>5. Sensitivitas Profit</h2>
@@ -905,15 +1233,15 @@ function exportCsv(){ const x=calc(), f=getForm(); const lines=[]; lines.push(['
 function copyReport(){ const x=calc(), f=getForm(); const text=`${f.projectName}\nProduk: ${f.brand} ${f.pumpType}\nQty: ${f.qtyUnit} unit\nHPP bersih: ${fmt.format(x.hpp)}\nProfit: ${fmt.format(x.profit)} (${x.usedPct.toFixed(1)}%)\nDPP: ${fmt.format(x.dpp)}\nPPN: ${fmt.format(x.ppn)}\nTotal penawaran: ${fmt.format(x.grand)}\nHarga per unit: ${fmt.format(x.perUnit)}\nPPh dipotong/cashflow: ${fmt.format(x.pph)}\nJasa profesional opsional: ${fmt.format(x.professionalFee)}\nBersih setelah jasa profesional: ${fmt.format(x.netAfterProfessional)}`; navigator.clipboard?.writeText(text); toast('Ringkasan disalin'); }
 function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
 
-function setTab(name){ document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name)); document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); $('tab-'+name).classList.add('active'); if(name==='partlist' && $('partBody') && !$('partBody').children.length) loadPartList(); window.scrollTo({top:0,behavior:'smooth'}); calc(); }
-const tabOrder=['data','biaya','partlist','setting','professional','laporan'];
+function setTab(name){ document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name)); document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); $('tab-'+name).classList.add('active'); if(name==='partlist' && $('partBody') && !$('partBody').children.length) loadPartList(); if(name==='budget' && $('budgetBody') && !$('budgetBody').children.length) initBudgetTable(); window.scrollTo({top:0,behavior:'smooth'}); calc(); }
+const tabOrder=['data','biaya','partlist','setting','professional','real','budget','laporan'];
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab)));
 $('nextBtn').addEventListener('click',()=>{const cur=document.querySelector('.tab.active').dataset.tab; setTab(tabOrder[Math.min(tabOrder.length-1,tabOrder.indexOf(cur)+1)]);});
 $('prevBtn').addEventListener('click',()=>{const cur=document.querySelector('.tab.active').dataset.tab; setTab(tabOrder[Math.max(0,tabOrder.indexOf(cur)-1)]);});
 $('addRowBtn').addEventListener('click',()=>{makeRow();calc();}); $('loadPresetBtn').addEventListener('click',loadPreset); $('saveBtn').addEventListener('click',save); $('exportBtn').addEventListener('click',exportCsv); $('copyReportBtn').addEventListener('click',copyReport); $('structurePdfBtn').addEventListener('click',structureHargaPdf); $('internalPdfBtn').addEventListener('click',internalReportPdf); $('structurePdfBtn2').addEventListener('click',structureHargaPdf); $('internalPdfBtn2').addEventListener('click',internalReportPdf);
 $('resetBtn').addEventListener('click',()=>{ if(confirm('Reset semua data?')){ localStorage.removeItem(stateKey); loadMasterPrice(); calc(); toast('Data direset dari master harga'); }});
 $('mobilePrintNow').addEventListener('click',()=>setTimeout(()=>window.print(),120)); $('mobilePrintBack').addEventListener('click',closeMobilePrintDoc);
-$('loadPartBtn').addEventListener('click', loadPartList); $('addPartBtn').addEventListener('click',()=>{makePartRow({group:currentPumpProfile().group, qty:1}); calcPartList();}); $('applyPartBtn').addEventListener('click', applyPartListToHpp); $('printPartBtn').addEventListener('click', printPartListDoc); $('exportPartBtn').addEventListener('click', exportPartListCsv);
+$('loadPartBtn').addEventListener('click', loadPartList); $('addPartBtn').addEventListener('click',()=>{makePartRow({group:currentPumpProfile().group, qty:1}); calcPartList();}); $('applyPartBtn').addEventListener('click', applyPartListToHpp); $('printPartBtn').addEventListener('click', printPartListDoc); $('exportPartBtn').addEventListener('click', exportPartListCsv); if($('refreshRealBtn')) $('refreshRealBtn').addEventListener('click',()=>{calc(); toast('Perhitungan HPP riil diperbarui');}); if($('exportRealBtn')) $('exportRealBtn').addEventListener('click',exportRealHppCsv); if($('budgetCalcBtn')) $('budgetCalcBtn').addEventListener('click',()=>{calcBudget(); toast('Anggaran semua produk dihitung');}); if($('budgetExampleBtn')) $('budgetExampleBtn').addEventListener('click',setBudgetExample); if($('budgetClearBtn')) $('budgetClearBtn').addEventListener('click',clearBudgetQty); if($('budgetExportBtn')) $('budgetExportBtn').addEventListener('click',exportBudgetCsv); if($('budgetPrintBtn')) $('budgetPrintBtn').addEventListener('click',printBudgetDoc); if($('budgetPdfBtn')) $('budgetPdfBtn').addEventListener('click',downloadBudgetDirectPdf);
 document.querySelectorAll('input,select,textarea').forEach(el=>el.addEventListener('input',calc));
 $('qtyUnit').addEventListener('input', syncMasterQty);
 $('displayPrice').addEventListener('input', calc);
@@ -923,7 +1251,7 @@ window.addEventListener('beforeinstallprompt', (e)=>{ e.preventDefault(); deferr
 async function doInstall(){ if(!deferredPrompt){ toast('Install muncul jika dibuka via HTTPS/hosting'); return; } deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; $('installBar').classList.remove('show'); }
 $('installBtnTop').addEventListener('click',doInstall); $('installBtnBar').addEventListener('click',doInstall); $('hideInstall').addEventListener('click',()=>$('installBar').classList.remove('show'));
 if('serviceWorker' in navigator){ window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js').catch(()=>{})); }
-if(!restore()){ $('qtyUnit').value = 1; loadMasterPrice(); } calc();
+initBudgetTable(); if(!restore()){ $('qtyUnit').value = 1; loadMasterPrice(); } calc();
 </script>
 </body>
 </html>
