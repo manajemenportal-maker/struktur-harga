@@ -395,7 +395,7 @@ function ensureFullMenu(){
 }
 
 const num = (v)=> Number(String(v ?? 0).replace(/[^0-9.-]/g,'')) || 0;
-const stateKey = 'hpp_pompa_pengadaan_pwa_v28_harga_ksa100g_15200000';
+const stateKey = 'hpp_pompa_pengadaan_pwa_v29_ksa100d_hpp_riil_rasio_80d';
 let deferredPrompt = null;
 
 const defaultRows = [
@@ -439,15 +439,15 @@ const MASTER_PRICE = {
     ]
   },
   'KSA-100D | Pompa Diesel 4 inch': {
-    label: 'KSA-100D Diesel 4 inch', source: 'master product pompa new.xlsx - struktur harga 4 inch', ppn: 12,
+    label: 'KSA-100D Diesel 4 inch', source: 'Master HPP Riil KSA-100D - rasio harga tayang dari KSA-80D Diesel 3 inch', ppn: 12,
     bundle: 'Selang hisap 6M, selang keluaran 50M, saringan, clamp, coupling, toolkit, manual',
-    note: 'Basis master: struktur harga 4 inch dengan Total HPP Rp9.556.750 per unit.',
+    note: 'Basis HPP riil KSA-100D Diesel 4 inch dihitung dari pola KSA-80D Diesel 3 inch menggunakan rasio harga tayang 4 inch terhadap 3 inch, sehingga struktur diesel 4 inch berbeda dari KSA-100G bensin 4 inch.',
     items: [
-      ['Unit pump 4 inch + kelengkapan standar','Barang utama',7567750],
-      ['Tenaga kerja perakitan','Tenaga kerja',440000],
-      ['Overhead listrik, peralatan, bengkel, administrasi','Overhead',616000],
-      ['Transportasi dan kemasan','Logistik',308000],
-      ['Lain-lain: testing, garansi, biaya tak terduga','QC & dokumen',625000]
+      ['Unit pump 4 inch diesel + kelengkapan standar','Barang utama',7427268],
+      ['Tenaga kerja perakitan','Tenaga kerja',709066],
+      ['Overhead listrik, peralatan, bengkel, administrasi','Overhead',992693],
+      ['Transportasi dan kemasan','Logistik',496346],
+      ['Lain-lain: testing, garansi, biaya tak terduga','QC & dokumen',1007196]
     ]
   },
   'KSA-160D | Pompa Diesel 6 inch': {
