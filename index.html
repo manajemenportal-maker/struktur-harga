@@ -106,7 +106,7 @@
         <div class="panel noPrint" style="margin-bottom:18px">
           <div class="panelBody">
             <div class="mobileTabWrap">
-              <label for="mobileTabSelect">Pilih Menu Aplikasi Lengkap 1-8</label>
+              <label for="mobileTabSelect">Pilih Menu Aplikasi Lengkap 1-9</label>
               <select id="mobileTabSelect" class="mobileTabSelect">
                 <option value="data">1. Data Pengadaan</option>
                 <option value="biaya">2. Rincian Biaya</option>
@@ -115,9 +115,10 @@
                 <option value="professional">5. Jasa Profesional</option>
                 <option value="real">6. HPP Riil</option>
                 <option value="budget">7. Anggaran Semua Produk</option>
-                <option value="laporan">8. Laporan</option>
+                <option value="edit">8. Edit Harga & HPP</option>
+                <option value="laporan">9. Laporan</option>
               </select>
-              <div class="hint" style="margin-top:8px">Gunakan pilihan ini di HP agar semua menu 1 sampai 8 langsung terbuka.</div>
+              <div class="hint" style="margin-top:8px">Gunakan pilihan ini di HP agar semua menu 1 sampai 9 langsung terbuka.</div>
             </div>
             <div class="tabs">
               <button class="tab active" data-tab="data">1. Data Pengadaan</button>
@@ -127,7 +128,8 @@
               <button class="tab" data-tab="professional">5. Jasa Profesional</button>
               <button class="tab" data-tab="real">6. HPP Riil</button>
               <button class="tab" data-tab="budget">7. Anggaran Semua Produk</button>
-              <button class="tab" data-tab="laporan">8. Laporan</button>
+              <button class="tab" data-tab="edit">8. Edit Harga & HPP</button>
+              <button class="tab" data-tab="laporan">9. Laporan</button>
             </div>
           </div>
         </div>
@@ -319,6 +321,53 @@
           </div>
         </section>
 
+        <section class="panel section" id="tab-edit">
+          <div class="panelHead">
+            <h2>Edit Harga & HPP Master</h2>
+            <span class="tag orange">Menu koreksi internal</span>
+          </div>
+          <div class="panelBody">
+            <div class="note">Menu ini dipakai untuk memperbaiki harga tayang, rincian HPP riil, dan parameter internal tanpa harus bongkar coding. Setelah disimpan, semua menu perhitungan, HPP Riil, Anggaran Semua Produk, Struktur Harga, Internal Report, dan PDF akan memakai angka terbaru.</div>
+            <div class="formGrid" style="margin-top:14px">
+              <div class="field span2"><label>Pilih Produk yang Diedit</label><select id="editProductSelect"></select></div>
+              <div class="field"><label>Pajak + PPh Default (%)</label><input id="editDefaultRealTaxPct" type="number" min="0" step="0.1" value="13.5" /></div>
+              <div class="field"><label>Fee Broker/Agen Default (%)</label><input id="editDefaultBrokerPct" type="number" min="0" step="0.1" value="30" /></div>
+              <div class="field span2"><label>Nominal Broker/Agen Tambahan</label><input id="editDefaultBrokerNominal" type="number" min="0" step="1000" value="0" /></div>
+              <div class="field span2"><label>Status Edit</label><input id="editStatusInfo" value="Siap diedit" readonly /></div>
+            </div>
+            <div class="rightActions" style="margin-top:12px">
+              <button class="btnPrimary" id="saveMasterEditBtn">💾 Simpan Perubahan Harga & HPP</button>
+              <button class="btnGhost" id="applyMasterToCurrentBtn">Terapkan ke Produk Aktif</button>
+              <button class="btnGhost" id="applyEditParamsBtn">Terapkan Parameter Pajak/Broker</button>
+              <button class="btnGhost" id="exportMasterEditBtn">Export JSON</button>
+              <button class="btnGhost" id="importMasterEditBtn">Import JSON</button>
+              <button class="btnDanger" id="resetSelectedMasterBtn">Reset Produk Ini</button>
+              <button class="btnDanger" id="resetAllMasterBtn">Reset Semua Master</button>
+              <input id="masterImportFile" type="file" accept="application/json,.json" style="display:none" />
+            </div>
+            <h3>Harga Tayang Semua Produk</h3>
+            <div class="tableWrap">
+              <table class="costTable" id="editPriceTable">
+                <thead><tr><th>Produk</th><th>Harga Tayang / Unit</th><th>HPP Riil / Unit</th><th>Sumber</th></tr></thead>
+                <tbody id="editPriceBody"></tbody>
+              </table>
+            </div>
+            <h3>Rincian HPP Riil Produk Terpilih</h3>
+            <div class="formula" id="editHppSummary">Pilih produk untuk melihat rincian HPP.</div>
+            <div class="rightActions" style="margin:10px 0">
+              <button class="btnGhost" id="addEditHppRowBtn">+ Tambah Komponen HPP</button>
+              <button class="btnGhost" id="reloadEditHppBtn">Muat Ulang Produk</button>
+            </div>
+            <div class="tableWrap">
+              <table class="costTable" id="editHppTable">
+                <thead><tr><th>Komponen HPP</th><th>Kategori</th><th>Harga / Unit</th><th>Total</th><th class="noPrint">Aksi</th></tr></thead>
+                <tbody id="editHppBody"></tbody>
+              </table>
+            </div>
+            <p class="disclaimer"><b>Catatan:</b> perubahan harga dan HPP disimpan di browser/perangkat yang digunakan. Untuk memindahkan ke perangkat lain gunakan Export JSON lalu Import JSON.</p>
+          </div>
+        </section>
+
         <section class="panel section" id="tab-laporan">
           <div class="panelHead">
             <h2>Laporan Ringkas Penawaran</h2>
@@ -383,7 +432,7 @@ const $ = (id)=>document.getElementById(id);
 const fmt = new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0});
 
 function ensureFullMenu(){
-  const items=[['data','1. Data Pengadaan'],['biaya','2. Rincian Biaya'],['partlist','3. Part List Unit + Engine'],['setting','4. Pajak & Margin'],['professional','5. Jasa Profesional'],['real','6. HPP Riil'],['budget','7. Anggaran Semua Produk'],['laporan','8. Laporan']];
+  const items=[['data','1. Data Pengadaan'],['biaya','2. Rincian Biaya'],['partlist','3. Part List Unit + Engine'],['setting','4. Pajak & Margin'],['professional','5. Jasa Profesional'],['real','6. HPP Riil'],['budget','7. Anggaran Semua Produk'],['edit','8. Edit Harga & HPP'],['laporan','9. Laporan']];
   const tabs=document.querySelector('.tabs');
   const select=$('mobileTabSelect');
   if(select){
@@ -395,7 +444,8 @@ function ensureFullMenu(){
 }
 
 const num = (v)=> Number(String(v ?? 0).replace(/[^0-9.-]/g,'')) || 0;
-const stateKey = 'hpp_pompa_pengadaan_pwa_v29_ksa100d_hpp_riil_rasio_80d';
+const stateKey = 'hpp_pompa_pengadaan_pwa_v30_edit_harga_hpp_master';
+const masterEditKey = 'hpp_pompa_master_edit_v30';
 let deferredPrompt = null;
 
 const defaultRows = [
@@ -488,6 +538,8 @@ const DISPLAY_PRICE = {
   'KSA-100G | Pompa Bensin 4 inch': 15200000,
   'Custom': 0
 };
+const DEFAULT_DISPLAY_PRICE = JSON.parse(JSON.stringify(DISPLAY_PRICE));
+const DEFAULT_MASTER_PRICE = JSON.parse(JSON.stringify(MASTER_PRICE));
 
 function getDisplayPriceForSelected(){ return DISPLAY_PRICE[$('pumpType').value] || 0; }
 const BUDGET_PRODUCTS = [
@@ -500,6 +552,168 @@ const BUDGET_PRODUCTS = [
 function productSlug(key){ return String(key).replace(/[^A-Za-z0-9]+/g,'_').replace(/^_+|_+$/g,''); }
 function masterUnitHppByKey(key){ const m=MASTER_PRICE[key]; return (m && Array.isArray(m.items)) ? m.items.reduce((s,item)=>s+num(item[2]),0) : 0; }
 function productLabelByKey(key){ return MASTER_PRICE[key]?.label || key; }
+
+function deepClone(v){ return JSON.parse(JSON.stringify(v)); }
+function restoreMasterEdits(){
+  const raw=localStorage.getItem(masterEditKey);
+  if(!raw) return false;
+  try{
+    const cfg=JSON.parse(raw);
+    if(cfg.displayPrice){ Object.keys(cfg.displayPrice).forEach(key=>{ if(Object.prototype.hasOwnProperty.call(DISPLAY_PRICE,key)) DISPLAY_PRICE[key]=num(cfg.displayPrice[key]); }); }
+    if(cfg.masterPrice){ Object.keys(cfg.masterPrice).forEach(key=>{ if(MASTER_PRICE[key]) MASTER_PRICE[key]=cfg.masterPrice[key]; }); }
+    return true;
+  }catch(e){ return false; }
+}
+function saveMasterEdits(quiet=false){
+  const cfg={displayPrice:{}, masterPrice:{}};
+  BUDGET_PRODUCTS.forEach(key=>{ cfg.displayPrice[key]=DISPLAY_PRICE[key]||0; cfg.masterPrice[key]=deepClone(MASTER_PRICE[key]); });
+  localStorage.setItem(masterEditKey, JSON.stringify(cfg));
+  if(!quiet) toast('Master harga dan HPP tersimpan');
+}
+function getEditProductKey(){ return $('editProductSelect')?.value || $('pumpType')?.value || BUDGET_PRODUCTS[0]; }
+function editCategories(){ return ['Barang utama','Aksesoris','Kelengkapan','Packing','Logistik','QC & dokumen','Administrasi','Tenaga kerja','Overhead','Biaya produksi','Garansi/Purna jual','Lainnya']; }
+function initEditMenu(){
+  if(!$('editProductSelect')) return;
+  const sel=$('editProductSelect');
+  if(!sel.options.length){ BUDGET_PRODUCTS.forEach(key=>{ const o=document.createElement('option'); o.value=key; o.textContent=productLabelByKey(key); sel.appendChild(o); }); }
+  if(!sel.value) sel.value=$('pumpType')?.value && BUDGET_PRODUCTS.includes($('pumpType').value) ? $('pumpType').value : BUDGET_PRODUCTS[0];
+  if($('editDefaultRealTaxPct')) $('editDefaultRealTaxPct').value = $('realTaxPct')?.value || 13.5;
+  if($('editDefaultBrokerPct')) $('editDefaultBrokerPct').value = $('brokerPct')?.value || 30;
+  if($('editDefaultBrokerNominal')) $('editDefaultBrokerNominal').value = $('brokerNominal')?.value || 0;
+  buildEditPriceTable();
+  loadEditHppRows(sel.value);
+}
+function buildEditPriceTable(){
+  if(!$('editPriceBody')) return;
+  $('editPriceBody').innerHTML='';
+  BUDGET_PRODUCTS.forEach(key=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><b>${escapeHtml(productLabelByKey(key))}</b><br><small>${escapeHtml(key)}</small></td>
+      <td><input class="editPriceInput inputNumeric" data-key="${escapeHtml(key)}" type="text" inputmode="numeric" autocomplete="off" value="${DISPLAY_PRICE[key]||0}" /></td>
+      <td class="moneyCell editHppCell" data-key="${escapeHtml(key)}">${fmt.format(masterUnitHppByKey(key))}</td>
+      <td><small>${escapeHtml(MASTER_PRICE[key]?.source || 'Master data')}</small></td>`;
+    const input=tr.querySelector('.editPriceInput');
+    input.addEventListener('input',()=>{ sanitizeMoneyInput(input); applyEditPricesFromTable(true); });
+    input.addEventListener('focus',()=>input.select());
+    $('editPriceBody').appendChild(tr);
+  });
+}
+function sanitizeMoneyInput(el){ if(!el) return 0; const clean=String(el.value||'').replace(/[^0-9]/g,''); if(el.value!==clean) el.value=clean; return num(clean); }
+function applyEditPricesFromTable(silent=false){
+  document.querySelectorAll('.editPriceInput').forEach(el=>{ DISPLAY_PRICE[el.dataset.key]=sanitizeMoneyInput(el); });
+  if($('displayPrice') && DISPLAY_PRICE[$('pumpType')?.value] !== undefined) $('displayPrice').value = DISPLAY_PRICE[$('pumpType').value] || 0;
+  refreshEditHppCells();
+  if($('budgetBody')) calcBudget();
+  calc();
+  if(!silent) toast('Harga tayang diterapkan');
+}
+function refreshEditHppCells(){ document.querySelectorAll('.editHppCell').forEach(td=>{ td.textContent=fmt.format(masterUnitHppByKey(td.dataset.key)); }); }
+function makeEditHppRow(item=['','Barang utama',0]){
+  const tr=document.createElement('tr');
+  tr.innerHTML=`
+    <td><input class="eName" value="${escapeHtml(item[0]||'')}" placeholder="Nama komponen" /></td>
+    <td><select class="eCat">${editCategories().map(x=>`<option ${x===(item[1]||'')?'selected':''}>${x}</option>`).join('')}</select></td>
+    <td><input class="ePrice inputNumeric" type="text" inputmode="numeric" autocomplete="off" value="${num(item[2])}" /></td>
+    <td class="moneyCell eTotal">Rp0</td>
+    <td class="noPrint"><button class="btnDanger miniBtn eDel">Hapus</button></td>`;
+  tr.querySelectorAll('input,select').forEach(el=>el.addEventListener('input',calcEditHppTotal));
+  const price=tr.querySelector('.ePrice'); price.addEventListener('input',()=>sanitizeMoneyInput(price)); price.addEventListener('focus',()=>price.select());
+  tr.querySelector('.eDel').addEventListener('click',()=>{ tr.remove(); calcEditHppTotal(); });
+  $('editHppBody').appendChild(tr);
+}
+function getEditHppRows(){
+  if(!$('editHppBody')) return [];
+  return [...document.querySelectorAll('#editHppBody tr')].map(tr=>({
+    name:tr.querySelector('.eName').value,
+    cat:tr.querySelector('.eCat').value,
+    price:num(tr.querySelector('.ePrice').value)
+  })).filter(r=>r.name || r.price>0);
+}
+function calcEditHppTotal(){
+  const rows=getEditHppRows(); let total=0;
+  rows.forEach((r,i)=>{ total+=r.price; const c=document.querySelectorAll('.eTotal')[i]; if(c) c.textContent=fmt.format(r.price); });
+  const key=getEditProductKey();
+  if($('editHppSummary')) $('editHppSummary').innerHTML=`<b>${escapeHtml(productLabelByKey(key))}</b> · Total HPP riil/unit: <b>${fmt.format(total)}</b> · Jumlah komponen: <b>${rows.length}</b>`;
+  if($('editStatusInfo')) $('editStatusInfo').value=`${productLabelByKey(key)} · HPP/unit ${fmt.format(total)}`;
+  return {rows,total};
+}
+function loadEditHppRows(key=getEditProductKey()){
+  if(!$('editHppBody')) return;
+  if($('editProductSelect')) $('editProductSelect').value=key;
+  $('editHppBody').innerHTML='';
+  const rows=(MASTER_PRICE[key]?.items || []).map(item=>[item[0],item[1],item[2]]);
+  rows.forEach(makeEditHppRow);
+  calcEditHppTotal();
+}
+function applyEditHppToRuntime(key=getEditProductKey(), silent=false){
+  const result=calcEditHppTotal();
+  if(!MASTER_PRICE[key]) return;
+  MASTER_PRICE[key].items=result.rows.map(r=>[r.name,r.cat,r.price]);
+  MASTER_PRICE[key].source='Master harga internal - diedit melalui menu Edit Harga & HPP';
+  if($('pumpType')?.value===key && $('masterSource')?.value.startsWith('Master Harga:')) loadMasterPrice(); else calc();
+  refreshEditHppCells();
+  if($('budgetBody')) calcBudget();
+  if(!silent) toast('Rincian HPP riil diterapkan');
+}
+function saveMasterEditor(){
+  applyEditPricesFromTable(true);
+  applyEditHppToRuntime(getEditProductKey(), true);
+  saveMasterEdits(false);
+  calc();
+}
+function addEditHppRow(){ makeEditHppRow(['Komponen baru','Barang utama',0]); calcEditHppTotal(); }
+function applySelectedMasterToCurrent(){
+  const key=getEditProductKey();
+  applyEditPricesFromTable(true);
+  applyEditHppToRuntime(key, true);
+  if($('pumpType')) $('pumpType').value=key;
+  loadMasterPrice();
+  saveMasterEdits(true);
+  toast('Harga dan HPP diterapkan ke produk aktif');
+}
+function applyEditParams(){
+  const tax=num($('editDefaultRealTaxPct')?.value || 13.5);
+  const broker=num($('editDefaultBrokerPct')?.value || 30);
+  const brokerNom=num($('editDefaultBrokerNominal')?.value || 0);
+  if($('realTaxPct')) $('realTaxPct').value=tax;
+  if($('budgetTaxPct')) $('budgetTaxPct').value=tax;
+  if($('brokerPct')) $('brokerPct').value=broker;
+  if($('budgetBrokerPct')) $('budgetBrokerPct').value=broker;
+  if($('brokerNominal')) $('brokerNominal').value=brokerNom;
+  if($('budgetBrokerNominal')) $('budgetBrokerNominal').value=brokerNom;
+  calc(); save(); toast('Parameter pajak/broker diterapkan');
+}
+function resetSelectedMaster(){
+  const key=getEditProductKey();
+  if(!confirm('Reset master harga dan HPP untuk produk ini?')) return;
+  DISPLAY_PRICE[key]=DEFAULT_DISPLAY_PRICE[key]||0;
+  MASTER_PRICE[key]=deepClone(DEFAULT_MASTER_PRICE[key]);
+  buildEditPriceTable(); loadEditHppRows(key); saveMasterEdits(true);
+  if($('pumpType')?.value===key) loadMasterPrice();
+  calcBudget(); calc(); toast('Produk dikembalikan ke master awal');
+}
+function resetAllMasterEdits(){
+  if(!confirm('Reset semua harga tayang dan HPP riil ke master awal?')) return;
+  BUDGET_PRODUCTS.forEach(key=>{ DISPLAY_PRICE[key]=DEFAULT_DISPLAY_PRICE[key]||0; MASTER_PRICE[key]=deepClone(DEFAULT_MASTER_PRICE[key]); });
+  localStorage.removeItem(masterEditKey);
+  buildEditPriceTable(); loadEditHppRows(getEditProductKey());
+  loadMasterPrice(); calcBudget(); calc(); toast('Semua master dikembalikan ke master awal');
+}
+function exportMasterEditJson(){
+  applyEditPricesFromTable(true); applyEditHppToRuntime(getEditProductKey(), true);
+  const cfg={displayPrice:{}, masterPrice:{}, exportedAt:new Date().toISOString()};
+  BUDGET_PRODUCTS.forEach(key=>{ cfg.displayPrice[key]=DISPLAY_PRICE[key]||0; cfg.masterPrice[key]=deepClone(MASTER_PRICE[key]); });
+  const blob=new Blob([JSON.stringify(cfg,null,2)],{type:'application/json'}); const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download='master-harga-hpp-pompa.json'; a.click(); URL.revokeObjectURL(a.href);
+}
+function importMasterEditJsonFile(file){
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{ try{ const cfg=JSON.parse(reader.result); if(cfg.displayPrice){ Object.keys(cfg.displayPrice).forEach(key=>{ if(DISPLAY_PRICE[key]!==undefined) DISPLAY_PRICE[key]=num(cfg.displayPrice[key]); }); } if(cfg.masterPrice){ Object.keys(cfg.masterPrice).forEach(key=>{ if(MASTER_PRICE[key]) MASTER_PRICE[key]=cfg.masterPrice[key]; }); } saveMasterEdits(true); buildEditPriceTable(); loadEditHppRows(getEditProductKey()); if($('pumpType')?.value) loadMasterPrice(); calcBudget(); calc(); toast('Master harga/HPP berhasil diimport'); }catch(e){ toast('File JSON tidak valid'); } };
+  reader.readAsText(file);
+}
+
 
 const PARTLIST_MASTER = [{"group":"3 inch","itemCode":"080.01.02.01","itemNo":"1","name":"PUMP COVER","code":"080.01.02.01","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.02","itemNo":"2","name":"LARGE O-RING","code":"080.01.02.02","qty":1,"spec":"rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.03","itemNo":"3","name":"SEALING WASHER (M8 Nylon)","code":"999.01.50","qty":4,"spec":"M8 Nylon Ring","subGroup":"BOLT","partCode":"999.01.50","price":0},{"group":"3 inch","itemCode":"080.01.02.04","itemNo":"4","name":"MOUNT BOLT (M8X50)","code":"999.01.03","qty":4,"spec":"M8 X 50","subGroup":"BOLT","partCode":"999.01.03","price":0},{"group":"3 inch","itemCode":"080.01.02.05","itemNo":"5","name":"MECHANICAL SEAL","code":"080.01.02.03","qty":1,"spec":"","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.06","itemNo":"6","name":"IMPELLER","code":"080.01.02.04","qty":1,"spec":"besi cor","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.07","itemNo":"7","name":"IMPELLER HOUSE","code":"080.01.02.05","qty":1,"spec":"besi cor","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.08","itemNo":"8","name":"SMALL O-RING (Rubber Seal)","code":"080.01.02.06","qty":1,"spec":"rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.09","itemNo":"9","name":"PUMP BODY","code":"080.01.02.07","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.10","itemNo":"10","name":"OULET SEAL (Gasket)","code":"080.01.02.08","qty":1,"spec":"gasket rubber","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.11","itemNo":"12","name":"OUTLET CONNECTION BOLT (M8X25)","code":"999.01.05","qty":4,"spec":"M10 x 25","subGroup":"BOLT","partCode":"999.01.05","price":0},{"group":"3 inch","itemCode":"080.01.02.12","itemNo":"13","name":"3/4\" PLUG O-RING","code":"080.01.02.09","qty":2,"spec":"3/4 inch rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.13","itemNo":"14","name":"3/4\" PLUG","code":"080.01.02.10","qty":2,"spec":"3/4 inch Plastic Plug","subGroup":"ACESORIES","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.14","itemNo":"18","name":"OUTLET FLANGE","code":"080.01.02.11","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.15","itemNo":"19","name":"INLET FLANGE","code":"080.01.02.12","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.16","itemNo":"20","name":"INLET CHECK VALVE","code":"080.01.02.13","qty":1,"spec":"rubber","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.17","itemNo":"21","name":"INLET CONNECTION BOLT (M10X20)","code":"999.01.04","qty":3,"spec":"M10 x 20","subGroup":"BOLT","partCode":"999.01.04","price":0},{"group":"3 inch","itemCode":"080.01.02.18","itemNo":"22","name":"PUMP BODY BOLT (M10X20)","code":"999.01.04","qty":4,"spec":"M10 x 20","subGroup":"BOLT","partCode":"999.01.04","price":0},{"group":"3 inch","itemCode":"080.01.02.19","itemNo":"24","name":"SUCTION STRAINER CLAMP","code":"080.01.02.14","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.20","itemNo":"25","name":"SUCTION STRAINER","code":"080.01.02.15","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.21","itemNo":"26","name":"SHAFT BOLT (M8X25)","code":"999.01.01","qty":1,"spec":"M8 x 25","subGroup":"BOLT","partCode":"999.01.01","price":0},{"group":"3 inch","itemCode":"080.01.02.22","itemNo":"27","name":"SHAFT BOLT WASHER (M8 Nylon)","code":"999.01.50","qty":1,"spec":"M8 Nylon Ring","subGroup":"BOLT","partCode":"999.01.50","price":0},{"group":"3 inch","itemCode":"080.01.02.23","itemNo":"28","name":"KEY / SPI","code":"080.01.02.16","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.24","itemNo":"29","name":"HOSE FLANGE","code":"080.01.02.17","qty":2,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.25","itemNo":"30","name":"HOSE FLANGE NAPLE","code":"080.01.02.18","qty":2,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.01","itemNo":"1","name":"PUMP COVER","code":"100.01.02.01","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.02","itemNo":"2","name":"LARGE O-RING","code":"100.01.02.02","qty":1,"spec":"rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.03","itemNo":"3","name":"SEALING WASHER (M8 Nylon)","code":"999.01.50","qty":4,"spec":"M8 Nylon Ring","subGroup":"BOLT","partCode":"999.01.50","price":0},{"group":"4 inch","itemCode":"100.01.02.04","itemNo":"4","name":"MOUNT BOLT (M8 X 50)","code":"999.01.03","qty":4,"spec":"M8 X 50","subGroup":"BOLT","partCode":"999.01.03","price":0},{"group":"4 inch","itemCode":"100.01.02.05","itemNo":"5","name":"MECHANICAL SEAL","code":"100.01.02.03","qty":1,"spec":"","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.06","itemNo":"6","name":"IMPELLER","code":"100.01.02.04","qty":1,"spec":"besi cor","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.07","itemNo":"7","name":"IMPELLER HOUSE","code":"100.01.02.05","qty":1,"spec":"besi cor","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.08","itemNo":"8","name":"SMALL O-RING","code":"100.01.02.06","qty":1,"spec":"rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.09","itemNo":"9","name":"PUMP BODY","code":"100.01.02.07","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.10","itemNo":"10","name":"OULET SEAL","code":"100.01.02.08","qty":1,"spec":"gasket rubber","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.11","itemNo":"12","name":"OUTLET CONNECTION BOLT (M10 x 25)","code":"999.01.05","qty":4,"spec":"M10 x 25","subGroup":"BOLT","partCode":"999.01.05","price":0},{"group":"4 inch","itemCode":"100.01.02.12","itemNo":"13","name":"3/4\" PLUG O-RING","code":"100.01.02.09","qty":2,"spec":"3/4 inch rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.13","itemNo":"14","name":"3/4\" PLUG","code":"100.01.02.10","qty":2,"spec":"3/4 inch Plastic Plug","subGroup":"ACESORIES","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.14","itemNo":"18","name":"OUTLET FLANGE","code":"100.01.02.11","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.15","itemNo":"19","name":"INLET FLANGE","code":"100.01.02.12","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.16","itemNo":"20","name":"INLET CHECK VALVE","code":"100.01.02.13","qty":1,"spec":"rubber","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.17","itemNo":"21","name":"INLET CONNECTION BOLT (M10 x 25)","code":"999.01.05","qty":4,"spec":"M10 x 25","subGroup":"BOLT","partCode":"999.01.05","price":0},{"group":"4 inch","itemCode":"100.01.02.18","itemNo":"22","name":"PUMP BODY BOLT (M10 x 30)","code":"999.01.06","qty":4,"spec":"M10 x 30","subGroup":"BOLT","partCode":"999.01.06","price":0},{"group":"4 inch","itemCode":"100.01.02.19","itemNo":"24","name":"SUCTION STRAINER CLAMP","code":"100.01.02.14","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.20","itemNo":"25","name":"SUCTION STRAINER","code":"100.01.02.15","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.21","itemNo":"26","name":"SHAFT BOLT (M8 x 25)","code":"999.01.01","qty":1,"spec":"M8 x 25","subGroup":"BOLT","partCode":"999.01.01","price":0},{"group":"4 inch","itemCode":"100.01.02.22","itemNo":"27","name":"SHAFT BOLT WASHER (M8 Nylon)","code":"999.01.50","qty":1,"spec":"M8 Nylon Ring","subGroup":"BOLT","partCode":"999.01.50","price":0},{"group":"4 inch","itemCode":"100.01.02.23","itemNo":"28","name":"KEY / SPI","code":"100.01.02.16","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.24","itemNo":"29","name":"HOSE FLANGE","code":"100.01.02.17","qty":2,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.25","itemNo":"30","name":"HOSE FLANGE NAPLE","code":"100.01.02.18","qty":2,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.01","itemNo":"1","name":"PUMP COVER","code":"160.01.02.01","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.02","itemNo":"2","name":"LARGE O-RING","code":"160.01.02.02","qty":1,"spec":"rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.03","itemNo":"3","name":"SEALING WASHER (M8 Nylon)","code":"999.01.50","qty":4,"spec":"M8 Nylon Ring","subGroup":"BOLT","partCode":"999.01.50","price":0},{"group":"6 inch","itemCode":"160.01.02.04","itemNo":"4","name":"MOUNT BOLT (M8X40)","code":"999.01.02","qty":4,"spec":"M8 X 40","subGroup":"BOLT","partCode":"999.01.02","price":0},{"group":"6 inch","itemCode":"160.01.02.05","itemNo":"5","name":"MECHANICAL SEAL","code":"160.01.02.03","qty":1,"spec":"","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.06","itemNo":"6","name":"IMPELLER","code":"160.01.02.04","qty":1,"spec":"besi cor","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.07","itemNo":"7","name":"IMPELLER HOUSE","code":"160.01.02.05","qty":1,"spec":"besi cor","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.08","itemNo":"8","name":"SMALL O-RING","code":"160.01.02.06","qty":1,"spec":"rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.09","itemNo":"9","name":"PUMP BODY","code":"160.01.02.07","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.10","itemNo":"10","name":"OULET SEAL (Gasket)","code":"160.01.02.08","qty":1,"spec":"gasket rubber","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.11","itemNo":"12","name":"OUTLET CONNECTION BOLT (M10X30)","code":"999.01.06","qty":5,"spec":"M10 x 30","subGroup":"BOLT","partCode":"999.01.06","price":0},{"group":"6 inch","itemCode":"160.01.02.12","itemNo":"13","name":"1\" PLUG O-RING","code":"160.01.02.09","qty":2,"spec":"1 inch rubber seal","subGroup":"RING & SEAL","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.13","itemNo":"14","name":"1\" PLUG","code":"160.01.02.10","qty":2,"spec":"1 INCH","subGroup":"ACESORIES","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.14","itemNo":"18","name":"OUTLET FLANGE","code":"160.01.02.11","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.15","itemNo":"19","name":"INLET FLANGE","code":"160.01.02.12","qty":1,"spec":"alumunium","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.16","itemNo":"20","name":"INLET CHECK VALVE","code":"160.01.02.13","qty":1,"spec":"rubber","subGroup":"PUMP UNIT","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.17","itemNo":"21","name":"INLET CONNECTION BOLT (M10X30 SH)","code":"999.01.07","qty":5,"spec":"M10 x 30 Socket Head","subGroup":"BOLT","partCode":"999.01.07","price":0},{"group":"6 inch","itemCode":"160.01.02.18","itemNo":"22","name":"PUMP BODY BOLT (M10X35)","code":"999.01.08","qty":4,"spec":"M10 x 35","subGroup":"BOLT","partCode":"999.01.08","price":0},{"group":"6 inch","itemCode":"160.01.02.19","itemNo":"24","name":"SUCTION STRAINER CLAMP","code":"160.01.02.14","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.20","itemNo":"25","name":"SUCTION STRAINER","code":"160.01.02.15","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.21","itemNo":"26","name":"SHAFT BOLT (M10X30)","code":"999.01.06","qty":1,"spec":"M10 x 30","subGroup":"BOLT","partCode":"999.01.06","price":0},{"group":"6 inch","itemCode":"160.01.02.22","itemNo":"27","name":"SHAFT BOLT WASHER (M10 Copper)","code":"999.01.60","qty":1,"spec":"M10 copper ring","subGroup":"BOLT","partCode":"999.01.60","price":0},{"group":"6 inch","itemCode":"160.01.02.23","itemNo":"28","name":"KEY / SPI","code":"160.01.02.16","qty":1,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.24","itemNo":"29","name":"HOSE FLANGE","code":"160.01.02.17","qty":2,"spec":"besi","subGroup":"ACESORIES","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.25","itemNo":"30","name":"HOSE FLANGE BOLT AND NUT (M10X40)","code":"999.01.09","qty":10,"spec":"M10 X 40","subGroup":"BOLT","partCode":"999.01.09","price":0},{"group":"6 inch","itemCode":"160.01.02.26","itemNo":"31","name":"3/4\" PLUG","code":"160.01.02.18","qty":1,"spec":"3/4 inch Plastic Plug","subGroup":"ACESORIES","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.27","itemNo":"32","name":"3/4\" PLUG O-RING","code":"160.01.02.19","qty":1,"spec":"3/4 inch rubber seal","subGroup":"ACESORIES","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.02.00","itemNo":"","name":"PUMP UNIT 3 INCH","code":"080.01.02.00","qty":1,"spec":"","subGroup":"WATER PUMP","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.02.00","itemNo":"","name":"PUMP UNIT 4 INCH","code":"100.01.02.00","qty":1,"spec":"","subGroup":"WATER PUMP","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.02.00","itemNo":"","name":"PUMP UNIT 6 INCH","code":"160.01.02.00","qty":1,"spec":"","subGroup":"WATER PUMP","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.01.01","itemNo":"","name":"ENGINE DIESEL 3 INCH","code":"080.01.01.01","qty":1,"spec":"7.5 HP","subGroup":"ENGINE","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.01.01","itemNo":"","name":"ENGINE DIESEL 4 INCH","code":"100.01.01.01","qty":1,"spec":"9 HP","subGroup":"ENGINE","partCode":"","price":0},{"group":"6 inch","itemCode":"160.01.01.01","itemNo":"","name":"ENGINE DIESEL 6 INCH","code":"160.01.01.01","qty":1,"spec":"12 HP","subGroup":"ENGINE","partCode":"","price":0},{"group":"3 inch","itemCode":"080.01.01.02","itemNo":"","name":"ENGINE GASOLINE 3 INCH","code":"080.02.01.01","qty":1,"spec":"6.5 HP","subGroup":"ENGINE","partCode":"","price":0},{"group":"4 inch","itemCode":"100.01.01.02","itemNo":"","name":"ENGINE GASOLINE 4 INCH","code":"100.02.01.01","qty":1,"spec":"6.5 HP","subGroup":"ENGINE","partCode":"","price":0}];
 
@@ -1257,8 +1471,8 @@ function exportCsv(){ const x=calc(), f=getForm(); const lines=[]; lines.push(['
 function copyReport(){ const x=calc(), f=getForm(); const text=`${f.projectName}\nProduk: ${f.brand} ${f.pumpType}\nQty: ${f.qtyUnit} unit\nHPP bersih: ${fmt.format(x.hpp)}\nProfit: ${fmt.format(x.profit)} (${x.usedPct.toFixed(1)}%)\nDPP: ${fmt.format(x.dpp)}\nPPN: ${fmt.format(x.ppn)}\nTotal penawaran: ${fmt.format(x.grand)}\nHarga per unit: ${fmt.format(x.perUnit)}\nPPh dipotong/cashflow: ${fmt.format(x.pph)}\nJasa profesional opsional: ${fmt.format(x.professionalFee)}\nBersih setelah jasa profesional: ${fmt.format(x.netAfterProfessional)}`; navigator.clipboard?.writeText(text); toast('Ringkasan disalin'); }
 function toast(msg){ const t=$('toast'); t.textContent=msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),1800); }
 
-function setTab(name){ document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name)); const mobileSelect=$('mobileTabSelect'); if(mobileSelect) mobileSelect.value=name; document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); const target=$('tab-'+name); if(target) target.classList.add('active'); if(name==='partlist' && $('partBody') && !$('partBody').children.length) loadPartList(); if(name==='budget' && $('budgetBody') && !$('budgetBody').children.length) initBudgetTable(); window.scrollTo({top:0,behavior:'smooth'}); calc(); }
-const tabOrder=['data','biaya','partlist','setting','professional','real','budget','laporan'];
+function setTab(name){ document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===name)); const mobileSelect=$('mobileTabSelect'); if(mobileSelect) mobileSelect.value=name; document.querySelectorAll('.section').forEach(s=>s.classList.remove('active')); const target=$('tab-'+name); if(target) target.classList.add('active'); if(name==='partlist' && $('partBody') && !$('partBody').children.length) loadPartList(); if(name==='budget' && $('budgetBody') && !$('budgetBody').children.length) initBudgetTable(); if(name==='edit') initEditMenu(); window.scrollTo({top:0,behavior:'smooth'}); calc(); }
+const tabOrder=['data','biaya','partlist','setting','professional','real','budget','edit','laporan'];
 ensureFullMenu(); document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>setTab(b.dataset.tab))); if($('mobileTabSelect')) $('mobileTabSelect').addEventListener('change',e=>setTab(e.target.value));
 $('nextBtn').addEventListener('click',()=>{const cur=document.querySelector('.tab.active').dataset.tab; setTab(tabOrder[Math.min(tabOrder.length-1,tabOrder.indexOf(cur)+1)]);});
 $('prevBtn').addEventListener('click',()=>{const cur=document.querySelector('.tab.active').dataset.tab; setTab(tabOrder[Math.max(0,tabOrder.indexOf(cur)-1)]);});
@@ -1266,6 +1480,17 @@ $('addRowBtn').addEventListener('click',()=>{makeRow();calc();}); $('loadPresetB
 $('resetBtn').addEventListener('click',()=>{ if(confirm('Reset semua data?')){ localStorage.removeItem(stateKey); loadMasterPrice(); calc(); toast('Data direset dari master harga'); }});
 $('mobilePrintNow').addEventListener('click',()=>setTimeout(()=>window.print(),120)); $('mobilePrintBack').addEventListener('click',closeMobilePrintDoc);
 $('loadPartBtn').addEventListener('click', loadPartList); $('addPartBtn').addEventListener('click',()=>{makePartRow({group:currentPumpProfile().group, qty:1}); calcPartList();}); $('applyPartBtn').addEventListener('click', applyPartListToHpp); $('printPartBtn').addEventListener('click', printPartListDoc); $('exportPartBtn').addEventListener('click', exportPartListCsv); if($('refreshRealBtn')) $('refreshRealBtn').addEventListener('click',()=>{calc(); toast('Perhitungan HPP riil diperbarui');}); if($('exportRealBtn')) $('exportRealBtn').addEventListener('click',exportRealHppCsv); if($('budgetCalcBtn')) $('budgetCalcBtn').addEventListener('click',()=>{calcBudget(); toast('Anggaran semua produk dihitung');}); if($('budgetClearBtn')) $('budgetClearBtn').addEventListener('click',clearBudgetQty); if($('budgetExportBtn')) $('budgetExportBtn').addEventListener('click',exportBudgetCsv); if($('budgetPrintBtn')) $('budgetPrintBtn').addEventListener('click',printBudgetDoc); if($('budgetPdfBtn')) $('budgetPdfBtn').addEventListener('click',downloadBudgetDirectPdf);
+if($('editProductSelect')) $('editProductSelect').addEventListener('change',e=>loadEditHppRows(e.target.value));
+if($('saveMasterEditBtn')) $('saveMasterEditBtn').addEventListener('click',saveMasterEditor);
+if($('applyMasterToCurrentBtn')) $('applyMasterToCurrentBtn').addEventListener('click',applySelectedMasterToCurrent);
+if($('applyEditParamsBtn')) $('applyEditParamsBtn').addEventListener('click',applyEditParams);
+if($('addEditHppRowBtn')) $('addEditHppRowBtn').addEventListener('click',addEditHppRow);
+if($('reloadEditHppBtn')) $('reloadEditHppBtn').addEventListener('click',()=>loadEditHppRows(getEditProductKey()));
+if($('resetSelectedMasterBtn')) $('resetSelectedMasterBtn').addEventListener('click',resetSelectedMaster);
+if($('resetAllMasterBtn')) $('resetAllMasterBtn').addEventListener('click',resetAllMasterEdits);
+if($('exportMasterEditBtn')) $('exportMasterEditBtn').addEventListener('click',exportMasterEditJson);
+if($('importMasterEditBtn')) $('importMasterEditBtn').addEventListener('click',()=>$('masterImportFile')?.click());
+if($('masterImportFile')) $('masterImportFile').addEventListener('change',e=>importMasterEditJsonFile(e.target.files?.[0]));
 document.querySelectorAll('input,select,textarea').forEach(el=>el.addEventListener('input',calc));
 $('qtyUnit').addEventListener('input', syncMasterQty);
 $('displayPrice').addEventListener('input', calc);
@@ -1275,7 +1500,7 @@ window.addEventListener('beforeinstallprompt', (e)=>{ e.preventDefault(); deferr
 async function doInstall(){ if(!deferredPrompt){ toast('Install muncul jika dibuka via HTTPS/hosting'); return; } deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; $('installBar').classList.remove('show'); }
 $('installBtnTop').addEventListener('click',doInstall); $('installBtnBar').addEventListener('click',doInstall); $('hideInstall').addEventListener('click',()=>$('installBar').classList.remove('show'));
 if('serviceWorker' in navigator){ window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js').catch(()=>{})); }
-initBudgetTable(); if(!restore()){ $('qtyUnit').value = 1; loadMasterPrice(); } calc();
+restoreMasterEdits(); initEditMenu(); initBudgetTable(); if(!restore()){ $('qtyUnit').value = 1; loadMasterPrice(); } calc();
 </script>
 </body>
 </html>
